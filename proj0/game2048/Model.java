@@ -136,8 +136,29 @@ public class Model extends Observable {
     /** Returns true if at least one space on the Board is empty.
      *  Empty spaces are stored as null.
      * */
+//    private boolean isEmpty() {
+//        for (int col=0; col < 4; col++) {
+//            for (int row=0; row < 4; row++) {
+//                board.tile(col,row)
+//                 if (value() > 0) {
+//                     return false;
+//                 }
+//            }
+//        }
+//        return true;
+//    }
+
+
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int col=0; col < b.size(); col++) {
+            for (int row=0; row < b.size(); row++) {
+                if (b.tile(col,row) == null) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
