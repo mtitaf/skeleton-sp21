@@ -1,7 +1,9 @@
 package game2048;
 
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Observable;
+import java.util.Objects;
 
 
 /** The state of a game of 2048.
@@ -110,9 +112,10 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
+        changed = allColMove(board);
+            // TODO: Modify this.board (and perhaps this.score) to account
+            // for the tilt to the Side SIDE. If the board changed, set the
+            // changed local variable to true.
 
         checkGameOver();
         if (changed) {
@@ -120,6 +123,147 @@ public class Model extends Observable {
         }
         return changed;
     }
+
+    public static int[] toIntArray(Integer[] integerArray) {
+        // 创建一个与 Integer 数组大小相同的 int 数组
+        int[] intArray = new int[integerArray.length];
+
+        // 遍历 Integer 数组，逐个提取整数值并存储到 int 数组中
+        for (int i = 0; i < integerArray.length; i++) {
+            intArray[i] = integerArray[i]; // 自动拆箱
+        }
+
+        return intArray;
+    }
+/**  return in column exist row */
+    private static int[] colExistRow(Board b,int c) {
+        int count = 0;
+        Integer[] existRowInteger = new Integer[4];
+        for (int row = 0; row < b.size();row++) {
+            if (b.tile(c, row) != null) {
+                existRowInteger[count] = row;
+                count += 1;
+            }
+        }
+        if (count == 0) {
+            return null;
+        }
+        existRowInteger = Arrays.stream(existRowInteger)
+                .filter(Objects::nonNull)
+                .toArray(Integer[]::new);
+        int[] existRow = toIntArray(existRowInteger);
+
+        return existRow;
+    }
+
+
+/** 移动所有的列 */
+    private  boolean allColMove(Board b) {
+        boolean move = false;
+        for (int col = 0; col < b.size(); col++) {
+            if (SingleColMove(b,col)) {
+                move = true;
+            }
+
+        }
+        return move;
+    }
+
+
+
+    private  boolean SingleColMove(Board b,int c) {
+        int[] existRow = colExistRow(b, c);
+        if (existRow == null) {
+            return false;
+        }
+        int count = existRow.length;
+        if (count == 1) {
+            return colOne(b, c);
+        } else if (count == 2) {
+            colTwo(b, c);
+            return true;
+        } else if (count == 3) {
+            colThree(b,c);
+            return true;
+        }
+//       }else if (count == 4) {
+//            colFour();
+//            return true;
+//        }
+        return false;
+    }
+
+    private static boolean colOne(Board b, int c) {
+        int[] existRow = colExistRow(b, c);
+
+        Tile t = b.tile(c, existRow[0]);
+        if (t.row() != 3) {
+            b.move(c,3,t);
+            return true;
+        }
+        return false;
+    }
+
+    private  boolean colTwo(Board b, int c) {
+        int[] existRow = colExistRow(b, c);
+        Tile t1 = b.tile(c, existRow[0]);
+        Tile t2 = b.tile(c, existRow[1]);
+        if (t1.value() == t2.value()) {
+            b.move(c,b.size() - 1, t2);
+            b.move(c,b.size() - 1, t1);
+            this.score += t2.value() * 2;
+            return true;
+        } else if (t2.row() == 3 && t1.row() == 2){
+            return false;
+        } else if (t2.row() == b.size() - 1) {
+            b.move(c,2,t1);
+            return true;
+        } else {
+            b.move(c,b.size() - 1,t2);
+            b.move(c,b.size() - 2,t1);
+            return true;
+        }
+    }
+
+    private boolean colThree(Board b, int c) {
+        int[] existRow = colExistRow(b, c);
+        Tile t1 = b.tile(c, existRow[0]);
+        Tile t2 = b.tile(c, existRow[1]);
+        Tile t3 = b.tile(c, existRow[2]);
+        if (t3.value() == t2.value()) {
+            b.move(c, b.size() - 1, t3);
+            b.move(c, b.size() - 1, t2);
+            b.move(c, b.size() - 2, t1);
+            this.score += t3.value() * 2;
+        } else if (t2.value() == t1.value()) {
+            if (t3.row() != 3) {
+                b.move(c,b.size() - 1, t3);
+                return true;
+            }
+            b.move(c, b.size() - 2, t2);
+            b.move(c, b.size() - 2, t1);
+
+            this.score += t2.value() * 2;
+        } else if (t3.row() == 3 && t2.row() == 2 && t1.row() ==1) {
+            return false;
+        } else {
+            if (t3.row() != 3) {
+                b.move(c,b.size() - 1, t3);
+                return true;
+            }
+            if (t2.row() != 2) {
+                b.move(c,b.size() - 2, t2);
+                return true;
+            }
+            if (t1.row() != 1) {
+                System.out.println(t1.row());
+                b.move(c,b.size() - 3, t1);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
