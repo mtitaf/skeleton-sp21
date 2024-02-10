@@ -136,17 +136,6 @@ public class Model extends Observable {
     /** Returns true if at least one space on the Board is empty.
      *  Empty spaces are stored as null.
      * */
-//    private boolean isEmpty() {
-//        for (int col=0; col < 4; col++) {
-//            for (int row=0; row < 4; row++) {
-//                board.tile(col,row)
-//                 if (value() > 0) {
-//                     return false;
-//                 }
-//            }
-//        }
-//        return true;
-//    }
 
 
     public static boolean emptySpaceExists(Board b) {
@@ -169,7 +158,16 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
-        return false;
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
+                if (b.tile(col, row) != null) {
+                    if (b.tile(col, row).value() == MAX_PIECE) {
+                        return true;
+                    }
+                }
+            }
+        }
+            return false;
     }
 
     /**
@@ -180,8 +178,52 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
+                if (colMove(b, col, row) || rowMove(b, col, row)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
+
+
+
+    public static boolean colMove(Board b, int c, int r) {
+        for (int col = c -1 ;col <= c + 1; col++){
+            if (col == -1 || col >= b.size() || col == c) {
+                continue;
+            }
+            Tile tile = b.tile(c,r);
+            Tile colTile = b.tile(col,r);
+            if (colTile == null) {
+                return true;
+            } else if (colTile.value() == tile.value()) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public static boolean rowMove(Board b, int c, int r) {
+        for (int row = r -1 ;row <= r + 1; row++){
+            if (row == -1 || row >= b.size() || row == r) {
+                continue;
+            }
+            Tile tile = b.tile(c,r);
+            Tile rowTile = b.tile(c,row);
+            if (rowTile == null) {
+                return true;
+            } else if (rowTile.value() == tile.value()) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
 
 
     @Override
