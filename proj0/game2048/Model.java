@@ -112,10 +112,26 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
-        changed = allColMove(board);
             // TODO: Modify this.board (and perhaps this.score) to account
             // for the tilt to the Side SIDE. If the board changed, set the
             // changed local variable to true.
+
+        if (side == Side.NORTH) {
+            changed = allColMove(board);
+        } else if (side == Side.WEST) {
+            board.setViewingPerspective(Side.WEST);
+            changed = allColMove(board);
+            board.setViewingPerspective(Side.NORTH);
+        } else if (side == Side.EAST) {
+            board.setViewingPerspective(Side.EAST);
+            changed = allColMove(board);
+            board.setViewingPerspective(Side.NORTH);
+        } else if (side == Side.SOUTH) {
+            board.setViewingPerspective(Side.SOUTH);
+            changed = allColMove(board);
+            board.setViewingPerspective(Side.NORTH);
+        }
+
 
         checkGameOver();
         if (changed) {
@@ -178,38 +194,31 @@ public class Model extends Observable {
         }
         int count = existRow.length;
         if (count == 1) {
-            return colOne(b, c);
+            return colOne(b, c, existRow);
         } else if (count == 2) {
-            colTwo(b, c);
-            return true;
+            return colTwo(b, c, existRow);
         } else if (count == 3) {
-            colThree(b,c);
-            return true;
+            return colThree(b, c, existRow);
         } else if (count == 4) {
-            colFour(b,c);
+           return colFour(b, c, existRow);
+        }
+        return false;
+    }
+
+    private static boolean colOne(Board b, int c,int[] existRow) {
+        Tile t1 = b.tile(c, existRow[0]);
+        if (existRow[0] != b.size() - 1) {
+            b.move(c,b.size() - 1, t1);
             return true;
         }
         return false;
     }
 
-    private static boolean colOne(Board b, int c) {
-        int[] existRow = colExistRow(b, c);
-
-        Tile t = b.tile(c, existRow[0]);
-        if (t.row() != 3) {
-            b.move(c,3,t);
-            return true;
-        }
-        return false;
-    }
-
-    private  boolean colTwo(Board b, int c) {
-
-        int[] existRow = colExistRow(b, c);
+    private  boolean colTwo(Board b, int c, int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
-        if (t1.value() == t2.value()) {
-            if (t2.row() != 3) {
+        if (t2.value() == t1.value()) {
+            if (existRow[0] != b.size() -1) {
             b.move(c,b.size() - 1, t2);
             }
             b.move(c,b.size() - 1, t1);
@@ -217,25 +226,21 @@ public class Model extends Observable {
             return true;
         } else if (t2.row() == 3 && t1.row() == 2){
             return false;
-        } else if (t2.row() == b.size() - 1) {
-            b.move(c,2,t1);
-            return true;
-        } else {
-            if (t2.row() != 3) {
+        } else{
+            if (existRow[0] != b.size() -1) {
                 b.move(c,b.size() - 1, t2);
             }
-            b.move(c,b.size() - 2,t1);
+            b.move(c,b.size() - 2, t1);
             return true;
         }
     }
 
-    private boolean colThree(Board b, int c) {
-        int[] existRow = colExistRow(b, c);
+    private boolean colThree(Board b, int c, int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
         Tile t3 = b.tile(c, existRow[2]);
         if (t3.value() == t2.value()) {
-            if (t3.row() != 3) {
+            if (existRow[0] != b.size() - 1) {
             b.move(c, b.size() - 1, t3);
             }
             b.move(c, b.size() - 1, t2);
@@ -244,33 +249,32 @@ public class Model extends Observable {
             return true;
 
         } else if (t2.value() == t1.value()) {
-            if (t3.row() != 3) {
+            if (existRow[0] != b.size() -1) {
                 b.move(c,b.size() - 1, t3);
             }
-            if (t2.row() != 2) {
+            if (existRow[1] != b.size() -2) {
             b.move(c, b.size() - 2, t2);
             }
             b.move(c, b.size() - 2, t1);
             this.score += t2.value() * 2;
             return true;
 
-        } else if (t3.row() == 3 && t2.row() == 2 && t1.row() ==1) {
+        } else if (existRow[0] == 3 && existRow[1] == 2 && existRow[2] ==1) {
             return false;
         } else {
-            if (t3.row() != 3) {
+            if (existRow[0] != b.size() -1) {
                 b.move(c,b.size() - 1, t3);
             }
-            if (t2.row() != 2) {
-                b.move(c,b.size() - 2, t2);
+            if (existRow[1] != b.size() -2) {
+                b.move(c, b.size() - 2, t2);
             }
-                b.move(c,b.size() - 3, t1);
-                return true;
+            b.move(c,b.size() - 3, t1);
+            return true;
             }
     }
 
 
-    private boolean colFour(Board b,int c) {
-        int[] existRow = colExistRow(b, c);
+    private boolean colFour(Board b,int c, int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
         Tile t3 = b.tile(c, existRow[2]);
@@ -279,24 +283,25 @@ public class Model extends Observable {
             b.move(c, b.size() - 1, t3);
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 2, t1);
-
+            this.score += t3.value() * 2 + t1.value() * 2;
             return true;
         }else if (t4.value() == t3.value()) {
             b.move(c, b.size() - 1, t3);
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 3, t1);
+            this.score += t3.value() *2;
         }else if (t3.value() == t2.value()) {
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 3, t1);
+            this.score += t2.value() * 2;
         }else if (t2.value() == t1.value()) {
             b.move(c, b.size() - 3, t1);
+            this.score += t1.value() * 2;
 
         }
-
-
-
         return false;
     }
+
 
 
 
