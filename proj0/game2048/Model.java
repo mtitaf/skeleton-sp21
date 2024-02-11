@@ -116,6 +116,7 @@ public class Model extends Observable {
             // for the tilt to the Side SIDE. If the board changed, set the
             // changed local variable to true.
 
+        /** Make the direction correctly */
         if (side == Side.NORTH) {
             changed = allColMove(board);
         } else if (side == Side.WEST) {
@@ -132,7 +133,6 @@ public class Model extends Observable {
             board.setViewingPerspective(Side.NORTH);
         }
 
-
         checkGameOver();
         if (changed) {
             setChanged();
@@ -140,6 +140,7 @@ public class Model extends Observable {
         return changed;
     }
 
+/** remove null from array */
     public static int[] toIntArray(Integer[] integerArray) {
         // 创建一个与 Integer 数组大小相同的 int 数组
         int[] intArray = new int[integerArray.length];
@@ -151,7 +152,7 @@ public class Model extends Observable {
 
         return intArray;
     }
-/**  return in column exist row */
+/**  Returns rows present in column */
     private static int[] colExistRow(Board b,int c) {
         int count = 0;
         Integer[] existRowInteger = new Integer[4];
@@ -186,7 +187,7 @@ public class Model extends Observable {
     }
 
 
-
+/** 根据列中存在块的个数选择不同的方法 */
     private  boolean SingleColMove(Board b,int c) {
         int[] existRow = colExistRow(b, c);
         if (existRow == null) {
@@ -205,6 +206,7 @@ public class Model extends Observable {
         return false;
     }
 
+    /** 只存在一个方块 */
     private static boolean colOne(Board b, int c,int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         if (existRow[0] != b.size() - 1) {
@@ -213,7 +215,7 @@ public class Model extends Observable {
         }
         return false;
     }
-
+    /**两个方块 */
     private  boolean colTwo(Board b, int c, int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
@@ -235,6 +237,7 @@ public class Model extends Observable {
         }
     }
 
+    /** 三个方块 */
     private boolean colThree(Board b, int c, int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
@@ -273,7 +276,7 @@ public class Model extends Observable {
             }
     }
 
-
+    /** 四个方块 */
     private boolean colFour(Board b,int c, int[] existRow) {
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
