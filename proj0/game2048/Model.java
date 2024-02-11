@@ -185,11 +185,10 @@ public class Model extends Observable {
         } else if (count == 3) {
             colThree(b,c);
             return true;
+        } else if (count == 4) {
+            colFour(b,c);
+            return true;
         }
-//       }else if (count == 4) {
-//            colFour();
-//            return true;
-//        }
         return false;
     }
 
@@ -205,11 +204,14 @@ public class Model extends Observable {
     }
 
     private  boolean colTwo(Board b, int c) {
+
         int[] existRow = colExistRow(b, c);
         Tile t1 = b.tile(c, existRow[0]);
         Tile t2 = b.tile(c, existRow[1]);
         if (t1.value() == t2.value()) {
+            if (t2.row() != 3) {
             b.move(c,b.size() - 1, t2);
+            }
             b.move(c,b.size() - 1, t1);
             this.score += t2.value() * 2;
             return true;
@@ -219,7 +221,9 @@ public class Model extends Observable {
             b.move(c,2,t1);
             return true;
         } else {
-            b.move(c,b.size() - 1,t2);
+            if (t2.row() != 3) {
+                b.move(c,b.size() - 1, t2);
+            }
             b.move(c,b.size() - 2,t1);
             return true;
         }
@@ -231,38 +235,69 @@ public class Model extends Observable {
         Tile t2 = b.tile(c, existRow[1]);
         Tile t3 = b.tile(c, existRow[2]);
         if (t3.value() == t2.value()) {
+            if (t3.row() != 3) {
             b.move(c, b.size() - 1, t3);
+            }
             b.move(c, b.size() - 1, t2);
             b.move(c, b.size() - 2, t1);
             this.score += t3.value() * 2;
+            return true;
+
         } else if (t2.value() == t1.value()) {
             if (t3.row() != 3) {
                 b.move(c,b.size() - 1, t3);
-                return true;
             }
+            if (t2.row() != 2) {
             b.move(c, b.size() - 2, t2);
+            }
             b.move(c, b.size() - 2, t1);
-
             this.score += t2.value() * 2;
+            return true;
+
         } else if (t3.row() == 3 && t2.row() == 2 && t1.row() ==1) {
             return false;
         } else {
             if (t3.row() != 3) {
                 b.move(c,b.size() - 1, t3);
-                return true;
             }
             if (t2.row() != 2) {
                 b.move(c,b.size() - 2, t2);
-                return true;
             }
-            if (t1.row() != 1) {
-                System.out.println(t1.row());
                 b.move(c,b.size() - 3, t1);
                 return true;
             }
+    }
+
+
+    private boolean colFour(Board b,int c) {
+        int[] existRow = colExistRow(b, c);
+        Tile t1 = b.tile(c, existRow[0]);
+        Tile t2 = b.tile(c, existRow[1]);
+        Tile t3 = b.tile(c, existRow[2]);
+        Tile t4 = b.tile(c, existRow[3]);
+        if (t4.value() == t3.value() && t2.value() == t1.value()) {
+            b.move(c, b.size() - 1, t3);
+            b.move(c, b.size() - 2, t2);
+            b.move(c, b.size() - 2, t1);
+
+            return true;
+        }else if (t4.value() == t3.value()) {
+            b.move(c, b.size() - 1, t3);
+            b.move(c, b.size() - 2, t2);
+            b.move(c, b.size() - 3, t1);
+        }else if (t3.value() == t2.value()) {
+            b.move(c, b.size() - 2, t2);
+            b.move(c, b.size() - 3, t1);
+        }else if (t2.value() == t1.value()) {
+            b.move(c, b.size() - 3, t1);
+
         }
+
+
+
         return false;
     }
+
 
 
     /** Checks if the game is over and sets the gameOver variable
@@ -341,7 +376,7 @@ public class Model extends Observable {
             }
             Tile tile = b.tile(c,r);
             Tile colTile = b.tile(col,r);
-            if (colTile == null) {
+            if (colTile == null || tile == null) {
                 return true;
             } else if (colTile.value() == tile.value()) {
                 return true;
@@ -358,7 +393,7 @@ public class Model extends Observable {
             }
             Tile tile = b.tile(c,r);
             Tile rowTile = b.tile(c,row);
-            if (rowTile == null) {
+            if (rowTile == null || tile == null) {
                 return true;
             } else if (rowTile.value() == tile.value()) {
                 return true;
