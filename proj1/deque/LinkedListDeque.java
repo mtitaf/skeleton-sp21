@@ -1,6 +1,6 @@
 package deque;
 
-public class LinkedListDeque<Item>  {
+public class LinkedListDeque<Item> implements Deque<Item> {
     private class StuffNode {
         public Item item;
         public StuffNode next;
@@ -24,7 +24,9 @@ public class LinkedListDeque<Item>  {
         size = 0;
     }
 
+
     /** Add an item of type T to the front of the deque.*/
+    @Override
     public  void addFirst(Item i) {
 
         StuffNode item = new StuffNode(sentinel,i,sentinel.next);
@@ -34,28 +36,90 @@ public class LinkedListDeque<Item>  {
     }
 
     /** Add an item of type T to the back of the deque. */
+    @Override
     public void addLast(Item i) {
         StuffNode item = new StuffNode(sentinel.prev, i, sentinel);
         sentinel.prev.next = item;
         sentinel.prev = item;
         size++;
     }
+
     /** Return true if deque is empty */
-//    public boolean isEmpty(T item);
+    @Override
+    public boolean isEmpty() {
+        return sentinel.next.item == null;
+    }
+
     /** Return the number of items in the deque */
-//    public int size();
+    @Override
+    public int size() {
+        return size;
+    }
+
     /** Print the items in the deque from first to last, separated by a space.
      * Once add the items have been printed, print out a new line. */
-//    public void printDeque();
+    @Override
+    public void printDeque() {
+        StuffNode p = sentinel.next;
+        while (p.item != null) {
+            System.out.print(p.item + " ");
+            p = p.next;
+        }
+        System.out.println();
+    }
+
     /** Removes and returns the item at the front of the deque.
      * if no such item exists, returns ull. */
-//    public T removeFirst();
+    @Override
+    public Item removeFirst() {
+        if (sentinel.next.item == null) {
+            return null;
+        }
+
+        Item i = sentinel.next.item;
+        sentinel.next.next.prev = sentinel;
+        sentinel.next = sentinel.next.next;
+        size--;
+
+        return i;
+    }
 
     /** Removes and returns the item at the back of the deque.
      * if no such item exists, returns null. */
-//    public T removeLast();
+    @Override
+    public Item removeLast() {
+        if (sentinel.next.item == null) {
+            return null;
+        }
+
+        Item i = sentinel.prev.item;
+        sentinel.prev.prev.next = sentinel;
+        sentinel.prev = sentinel.prev.prev;
+        size--;
+
+        return i;
+    }
+
     /** Get the item at the given index, where 0 is the front,
      *  1 is the next item, and so forth. if no such item exists,
      *  returns null. Must not alter the deque! */
-//    public T get(int index);
+    @Override
+    public Item get(int index) {
+        if (sentinel.next.item == null) {
+            return null;
+        }
+
+        StuffNode p = sentinel.next;
+
+        while (index <= 0) {
+            if (p.item == null) {
+                return null;
+            }
+            p = p.next;
+            index--;
+        }
+
+        return p.item;
+
+    }
 }
