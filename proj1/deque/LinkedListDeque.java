@@ -14,7 +14,6 @@ public class LinkedListDeque<Item> implements Deque<Item> {
     }
 
     private StuffNode sentinel;
-
     private int size;
 
     public LinkedListDeque() {
@@ -105,7 +104,7 @@ public class LinkedListDeque<Item> implements Deque<Item> {
      *  returns null. Must not alter the deque! */
     @Override
     public Item get(int index) {
-        if (sentinel.next.item == null) {
+        if (sentinel.next.item == null || index < 0) {
             return null;
         }
 
@@ -122,4 +121,13 @@ public class LinkedListDeque<Item> implements Deque<Item> {
         return p.item;
 
     }
+
+//    public Item getRecursive(int index) {
+//        if (index == 0) {
+//
+//        }
+//
+//        index--;
+//
+//    }
 }
