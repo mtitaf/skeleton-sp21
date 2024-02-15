@@ -1,5 +1,7 @@
 package deque;
 
+import afu.org.checkerframework.checker.igj.qual.I;
+
 public class ArrayDeque<Item> {
 
     private Item[] items;
@@ -10,8 +12,8 @@ public class ArrayDeque<Item> {
         size = 0;
     }
 
-    public void resize(int size) {
-        Item[] newItem =  (Item[]) new Object[size];
+    public void resize(int reSize) {
+        Item[] newItem =  (Item[]) new Object[reSize];
         System.arraycopy(items, 0, newItem, 0, size);
         items = newItem;
 
@@ -19,17 +21,28 @@ public class ArrayDeque<Item> {
 
 
     /** Add an item of type T to the front of the deque.*/
-    public  void addFirst(Item item) {
-        Item[] newItem =  (Item[]) new Object[size];
+    public  void addFirst(Item i) {
+        if (size == items.length) {
+            resize((int)(items.length * 1.2));
+        }
+
+        if (size == 0) {
+            items[0] = i;
+            size++;
+            return;
+        }
+        Item[] newItem =  (Item[]) new Object[items.length];
         System.arraycopy(items, 0, newItem, 1, size);
         items = newItem;
-        items[0] = item;
+        items[0] = i;
         size++;
-
     }
 
     /** Add an item of type T to the back of the deque. */
     public void addLast(Item item) {
+        if (size == items.length) {
+            resize((int)(items.length * 1.2));
+        }
         items[size] = item;
         size++;
     }
@@ -56,8 +69,12 @@ public class ArrayDeque<Item> {
     /** Removes and returns the item at the front of the deque.
      * if no such item exists, returns ull. */
     public Item removeFirst() {
+        if (size == 0) {
+            return null;
+        }
+
         Item i = items[0];
-        Item[] newItem =  (Item[]) new Object[size];
+        Item[] newItem =  (Item[]) new Object[items.length];
         System.arraycopy(items, 1, newItem, 0, size -1);
         items = newItem;
         size--;
@@ -67,6 +84,10 @@ public class ArrayDeque<Item> {
     /** Removes and returns the item at the back of the deque.
      * if no such item exists, returns null. */
     public Item removeLast() {
+        if (size == 0) {
+            return null;
+        }
+
         Item i = items[size];
         items[size] = null;
         size--;
@@ -78,5 +99,12 @@ public class ArrayDeque<Item> {
      *  returns null. Must not alter the deque! */
     public Item get(int index) {
         return items[index];
+    }
+
+    public Item getLast() {
+        if (isEmpty()) {
+            return null;
+        }
+        return items[size];
     }
 }
