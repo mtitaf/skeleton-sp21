@@ -2,7 +2,7 @@ package deque;
 
 import afu.org.checkerframework.checker.igj.qual.I;
 
-public class ArrayDeque<Item> {
+public class ArrayDeque<Item> implements Deque<Item>{
 
     private Item[] items;
     private int size;
@@ -12,7 +12,7 @@ public class ArrayDeque<Item> {
         size = 0;
     }
 
-    public void resize(int reSize) {
+    private void resize(int reSize) {
         Item[] newItem =  (Item[]) new Object[reSize];
         System.arraycopy(items, 0, newItem, 0, size);
         items = newItem;
@@ -21,6 +21,7 @@ public class ArrayDeque<Item> {
 
 
     /** Add an item of type T to the front of the deque.*/
+    @Override
     public  void addFirst(Item i) {
         if (size == items.length) {
             resize((int)(items.length * 1.2));
@@ -39,6 +40,7 @@ public class ArrayDeque<Item> {
     }
 
     /** Add an item of type T to the back of the deque. */
+    @Override
     public void addLast(Item item) {
         if (size == items.length) {
             resize((int)(items.length * 1.2));
@@ -48,28 +50,32 @@ public class ArrayDeque<Item> {
     }
 
     /** Return true if deque is empty */
+    @Override
     public boolean isEmpty() {
         return (size == 0);
     }
 
     /** Return the number of items in the deque */
+    @Override
     public int size() {
         return size;
     }
 
     /** Print the items in the deque from first to last, separated by a space.
      * Once add the items have been printed, print out a new line. */
+    @Override
     public void printDeque() {
         for (int i = 0; i < size; i++) {
-            System.out.print(items[i]);
+            System.out.print(items[i] + " ");
         }
         System.out.println();
     }
 
     /** Removes and returns the item at the front of the deque.
      * if no such item exists, returns ull. */
+    @Override
     public Item removeFirst() {
-        if (size == 0) {
+        if (isEmpty()) {
             return null;
         }
 
@@ -78,33 +84,46 @@ public class ArrayDeque<Item> {
         System.arraycopy(items, 1, newItem, 0, size -1);
         items = newItem;
         size--;
+
+        if ((size < items.length / 4) && (size > 4)) {
+            resize(items.length / 4);
+        }
+
         return i;
     }
 
     /** Removes and returns the item at the back of the deque.
      * if no such item exists, returns null. */
+    @Override
     public Item removeLast() {
-        if (size == 0) {
+        if (isEmpty()) {
             return null;
         }
 
-        Item i = items[size];
-        items[size] = null;
+        Item i = items[size -1];
+        items[size - 1] = null;
         size--;
+        if ((size < items.length / 4) && (size > 8)) {
+            resize(items.length / 4);
+        }
+
+
         return i;
     }
 
     /** Get the item at the given index, where 0 is the front,
      *  1 is the next item, and so forth. if no such item exists,
      *  returns null. Must not alter the deque! */
+    @Override
     public Item get(int index) {
         return items[index];
     }
 
+    /** Return last item,if not exists, return null */
     public Item getLast() {
         if (isEmpty()) {
             return null;
         }
-        return items[size];
+        return items[size -1];
     }
 }

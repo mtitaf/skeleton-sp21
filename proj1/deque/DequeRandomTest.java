@@ -10,29 +10,29 @@ public class DequeRandomTest {
 
     @Test
     public void randomTest() {
-        ArrayDeque<Integer> L = new ArrayDeque<>();
-        LinkedListDeque<Integer> B = new LinkedListDeque<>();
+        ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
+        LinkedListDeque<Integer> linkDeque = new LinkedListDeque<>();
 
-        int N = 500;
+        int N = 1000000;
         for (int i = 0; i < N; i += 1) {
             int operationNumber = StdRandom.uniform(0, 4);
             if (operationNumber == 0) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
-                L.addLast(randVal);
-                B.addLast(randVal);
+                arrayDeque.addLast(randVal);
+                linkDeque.addLast(randVal);
             } else if (operationNumber == 1) {
                 // size
-                int sizeL = L.size();
-                int sizeB = B.size();
+                int sizeL = arrayDeque.size();
+                int sizeB = linkDeque.size();
                 assertEquals(sizeL, sizeB);
-            } else if (operationNumber == 2 && L.size() > 0) {
+            } else if (operationNumber == 2 && arrayDeque.size() > 0 ) {
                 //getLast
-                assertEquals(L.getLast(), B.getLast());
-            } else if (operationNumber == 3 && L.size() > 0) {
+                assertEquals(arrayDeque.getLast(), linkDeque.getLast());
+            } else if (operationNumber == 3 && arrayDeque.size() > 0) {
                 //removeLast
-                int lastL = L.removeLast();
-                int lastB = B.removeLast();
+                int lastL = arrayDeque.removeLast();
+                int lastB = linkDeque.removeLast();
                 assertEquals(lastL, lastB);
             }
         }
