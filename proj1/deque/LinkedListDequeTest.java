@@ -35,6 +35,19 @@ public class LinkedListDequeTest {
 		System.out.println("Printing out deque: ");
 		lld1.printDeque();
 		*/
+
+        LinkedListDeque<String> lld1 = new LinkedListDeque<>();
+        lld1.addFirst("tow");
+        lld1.addFirst("three");
+        lld1.addLast("ko");
+        lld1.addLast("oooo");
+
+        LinkedListDeque<Integer> lld2 = new LinkedListDeque<>();
+        lld2.addFirst(2);
+        lld2.addFirst(3);
+        lld2.addLast(4);
+        lld2.addLast(5);
+//        assertTrue("A newly initialized LLDeque should be empty", lld1.is);
     }
 
     @Test
