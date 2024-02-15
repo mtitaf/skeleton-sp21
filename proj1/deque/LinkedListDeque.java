@@ -38,6 +38,7 @@ public class LinkedListDeque<Item>  {
         StuffNode item = new StuffNode(sentinel.prev, i, sentinel);
         sentinel.prev.next = item;
         sentinel.prev = item;
+        size++;
     }
     /** Return true if deque is empty */
 //    public boolean isEmpty(T item);
