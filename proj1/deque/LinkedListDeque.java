@@ -43,11 +43,6 @@ public class LinkedListDeque<Item> implements Deque<Item> {
         size++;
     }
 
-    /** Return true if deque is empty */
-    @Override
-    public boolean isEmpty() {
-        return sentinel.next.item == null;
-    }
 
     /** Return the number of items in the deque */
     @Override

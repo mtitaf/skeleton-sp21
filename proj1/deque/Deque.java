@@ -8,7 +8,9 @@ public interface Deque<Item> {
     public void addLast(Item item);
 
     /** Return true if deque is empty */
-    public boolean isEmpty();
+    default public boolean isEmpty() {
+        return size() == 0;
+    }
 
     /** Return the number of items in the deque */
     public int size();

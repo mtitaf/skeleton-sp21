@@ -32,6 +32,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
         items = newItem;
     }
 
+    /** 检查是否需要调整大小,如果需要,则调整大小 */
     public void checkSize() {
         if (size == items.length) {
             resize((int)(items.length * 1.2));
@@ -65,11 +66,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
         size++;
     }
 
-    /** Return true if deque is empty */
-    @Override
-    public boolean isEmpty() {
-        return (size == 0);
-    }
+
 
     /** Return the number of items in the deque */
     @Override
@@ -130,17 +127,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
         return i;
     }
 
-    public Item remove(int index) {
-        if (isEmpty()) {
-            return null;
-        }
 
-        Item i = items[index];
-        items[index] = null;
-        size--;
-        checkSize();
-        return i;
-    }
 
     /** Get the item at the given index, where 0 is the front,
      *  1 is the next item, and so forth. if no such item exists,
