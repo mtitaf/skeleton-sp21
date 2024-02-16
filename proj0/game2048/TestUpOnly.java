@@ -107,4 +107,95 @@ public class TestUpOnly extends TestUtils {
         checkChanged(Side.NORTH, true, changed);
         checkModel(after, 4, 0, prevBoard, Side.NORTH);
     }
+
+    @Test
+    public void oneTileTest() {
+        int[][] before = new int[][] {
+                {2, 0, 2, 2},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+        };
+        int[][] after = new int[][] {
+                {2, 0, 2, 2},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+        };
+
+        updateModel(before, 0, 0, false);
+        String prevBoard = model.toString();
+        boolean changed = model.tilt(Side.NORTH);
+        checkChanged(Side.NORTH, false, changed);
+        checkModel(after, 0, 0, prevBoard, Side.NORTH);
+    }
+
+    @Test
+    public void TwoTileTest() {
+        int[][] before = new int[][] {
+                {2, 0, 2, 2},
+                {4, 0, 4, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+        };
+        int[][] after = new int[][] {
+                {2, 0, 2, 2},
+                {4, 0, 4, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+        };
+
+        updateModel(before, 0, 0, false);
+        String prevBoard = model.toString();
+        boolean changed = model.tilt(Side.NORTH);
+        checkChanged(Side.NORTH, false, changed);
+        checkModel(after, 0, 0, prevBoard, Side.NORTH);
+    }
+
+    @Test
+    public void ThreeTileTest() {
+        int[][] before = new int[][] {
+                {2, 0, 2, 2},
+                {4, 0, 4, 0},
+                {8, 0, 6, 0},
+                {0, 0, 0, 0},
+        };
+        int[][] after = new int[][] {
+                {2, 0, 2, 2},
+                {4, 0, 4, 0},
+                {8, 0, 6, 0},
+                {0, 0, 0, 0},
+        };
+
+        updateModel(before, 0, 0, false);
+        String prevBoard = model.toString();
+        boolean changed = model.tilt(Side.NORTH);
+        checkChanged(Side.NORTH, false, changed);
+        checkModel(after, 0, 0, prevBoard, Side.NORTH);
+    }
+
+    @Test
+    public void FourTileTest() {
+        int[][] before = new int[][] {
+                {2, 0, 2, 2},
+                {4, 0, 4, 0},
+                {8, 0, 6, 0},
+                {16, 0, 8, 0},
+        };
+        int[][] after = new int[][] {
+                {2, 0, 2, 2},
+                {4, 0, 4, 0},
+                {8, 0, 6, 0},
+                {16, 0, 8, 0},
+        };
+
+        updateModel(before, 0, 0, false);
+        String prevBoard = model.toString();
+        boolean changed = model.tilt(Side.NORTH);
+        checkChanged(Side.NORTH, false, changed);
+        checkModel(after, 0, 0, prevBoard, Side.NORTH);
+    }
+
+
+
 }

@@ -169,6 +169,7 @@ public class Model extends Observable {
                 .filter(Objects::nonNull)
                 .toArray(Integer[]::new);
         int[] existRow = toIntArray(existRowInteger);
+        Arrays.sort(existRow);
 
         return existRow;
     }
@@ -226,7 +227,7 @@ public class Model extends Observable {
             b.move(c,b.size() - 1, t1);
             this.score += t2.value() * 2;
             return true;
-        } else if (t2.row() == 3 && t1.row() == 2){
+        } else if (existRow[1] == 3 && existRow[0] == 2){
             return false;
         } else{
             if (existRow[0] != b.size() -1) {
@@ -262,7 +263,7 @@ public class Model extends Observable {
             this.score += t2.value() * 2;
             return true;
 
-        } else if (existRow[0] == 3 && existRow[1] == 2 && existRow[2] ==1) {
+        } else if (existRow[2] == 3 && existRow[1] == 2 && existRow[0] ==1) {
             return false;
         } else {
             if (existRow[0] != b.size() -1) {
@@ -293,14 +294,16 @@ public class Model extends Observable {
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 3, t1);
             this.score += t3.value() *2;
+            return true;
         }else if (t3.value() == t2.value()) {
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 3, t1);
             this.score += t2.value() * 2;
+            return true;
         }else if (t2.value() == t1.value()) {
             b.move(c, b.size() - 3, t1);
             this.score += t1.value() * 2;
-
+            return true;
         }
         return false;
     }
