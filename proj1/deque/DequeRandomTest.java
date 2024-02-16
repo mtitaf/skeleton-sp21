@@ -59,7 +59,7 @@ public class DequeRandomTest {
             } else if (operationNumber == 2 && arrayDeque.size() > 0 ) {
                 //getLast
                 assertEquals(arrayDeque.getLast(), linkDeque.getLast());
-                assertEquals(arrayDeque.get(operationNumber),linkDeque.get(operationNumber));
+                assertEquals(arrayDeque.get(operationNumber),linkDeque.getRecursive(operationNumber));
             } else if (operationNumber == 3 && arrayDeque.size() > 0) {
                 //removeLast
                 String lastL = arrayDeque.removeLast();

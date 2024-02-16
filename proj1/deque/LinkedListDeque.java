@@ -124,12 +124,21 @@ public class LinkedListDeque<Item> implements Deque<Item> {
         return sentinel.prev.item;
     }
 
-//    public Item getRecursive(int index) {
-//        if (index == 0) {
-//
-//        }
-//
-//        index--;
-//
-//    }
+
+
+    public  Item getRecursive(int index) {
+        StuffNode p = sentinel.next;
+        return Recursive(p, index);
+    }
+
+    private  Item Recursive(StuffNode p, int index) {
+        if (p.item == null) {
+            return null;
+        } else if ( index == 0) {
+            return p.item;
+        }
+        return Recursive(p.next, index -1);
+    }
+
+
 }

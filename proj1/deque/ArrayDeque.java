@@ -1,14 +1,12 @@
 package deque;
 
-import afu.org.checkerframework.checker.igj.qual.I;
-
 public class ArrayDeque<Item> implements Deque<Item>{
 
     private Item[] items;
     private int size;
     private int first;
     private int last;
-    private int middle;
+
 
     public ArrayDeque() {
         items = (Item[]) new Object[8];
