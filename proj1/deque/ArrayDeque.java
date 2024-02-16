@@ -6,17 +6,30 @@ public class ArrayDeque<Item> implements Deque<Item>{
 
     private Item[] items;
     private int size;
+    private int first;
+    private int last;
+    private int middle;
 
     public ArrayDeque() {
         items = (Item[]) new Object[8];
         size = 0;
+        first = 0;
+        last = 0;
     }
 
+    /** 调整数组大小为reSize */
     private void resize(int reSize) {
         Item[] newItem =  (Item[]) new Object[reSize];
-        System.arraycopy(items, 0, newItem, 0, size);
-        items = newItem;
+        int index;
 
+        for (int i = 0; i < size; i++) {
+            index = safeIndex(i) ;
+            newItem[i] = items[index];
+        }
+
+        first = 0;
+        last = size - 1;
+        items = newItem;
     }
 
 
@@ -27,25 +40,25 @@ public class ArrayDeque<Item> implements Deque<Item>{
             resize((int)(items.length * 1.2));
         }
 
-        if (size == 0) {
-            items[0] = i;
-            size++;
-            return;
-        }
-        Item[] newItem =  (Item[]) new Object[items.length];
-        System.arraycopy(items, 0, newItem, 1, size);
-        items = newItem;
-        items[0] = i;
+        first--;
+        setFirstLast();
+
+        items[first] = i;
         size++;
     }
 
     /** Add an item of type T to the back of the deque. */
     @Override
-    public void addLast(Item item) {
+    public void addLast(Item i) {
         if (size == items.length) {
             resize((int)(items.length * 1.2));
         }
-        items[size] = item;
+
+
+        last++;
+        setFirstLast();
+
+        items[last] = i;
         size++;
     }
 
@@ -65,8 +78,11 @@ public class ArrayDeque<Item> implements Deque<Item>{
      * Once add the items have been printed, print out a new line. */
     @Override
     public void printDeque() {
+        int index;
+
         for (int i = 0; i < size; i++) {
-            System.out.print(items[i] + " ");
+            index = safeIndex(i);
+            System.out.print(items[first + i] + " ");
         }
         System.out.println();
     }
@@ -79,10 +95,11 @@ public class ArrayDeque<Item> implements Deque<Item>{
             return null;
         }
 
-        Item i = items[0];
-        Item[] newItem =  (Item[]) new Object[items.length];
-        System.arraycopy(items, 1, newItem, 0, size -1);
-        items = newItem;
+        Item i = items[first];
+        items[first] = null;
+
+        first++;
+        setFirstLast();
         size--;
 
         if ((size < items.length / 4) && (size > 4)) {
@@ -100,13 +117,15 @@ public class ArrayDeque<Item> implements Deque<Item>{
             return null;
         }
 
-        Item i = items[size -1];
-        items[size - 1] = null;
+        Item i = items[last];
+        items[last] = null;
+
+        last--;
+        setFirstLast();
         size--;
         if ((size < items.length / 4) && (size > 8)) {
             resize(items.length / 4);
         }
-
 
         return i;
     }
@@ -116,6 +135,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
      *  returns null. Must not alter the deque! */
     @Override
     public Item get(int index) {
+        index = safeIndex(index);
         return items[index];
     }
 
@@ -124,6 +144,40 @@ public class ArrayDeque<Item> implements Deque<Item>{
         if (isEmpty()) {
             return null;
         }
-        return items[size -1];
+        return items[last];
     }
+
+    /** 调整 first last 的指向, 如果数组为空,将 first last 重置为 0 ,否则 ,确保指向不超出数组长度 */
+    public void setFirstLast() {
+        if (size == 0) {
+            first = 0;
+            last = 0;
+        } else {
+            first = indexFirstLast(first);
+            last = indexFirstLast(last);
+        }
+    }
+
+
+    /**  */
+    public int indexFirstLast(int index) {
+        if (index == items.length) {
+            index = 0;
+        } else if (index < 0) {
+            index = items.length - 1;
+        }
+        return index;
+    }
+
+
+    /** 确保 index 不会超出数组长度 */
+    public int safeIndex(int index) {
+        if (index + first >= items.length) {
+            index = index + first - items.length;
+        }else {
+            index += first;
+        }
+        return index;
+    }
+
 }

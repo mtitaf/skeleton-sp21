@@ -43,8 +43,8 @@ public class ArrayDequeTest {
     @Test
     public void removeTest() {
         ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
-        int x = 10;
-        int y = 12;
+        int x = 10000;
+        int y = 12000;
 
         for (int i =0; i < x; i++) {
         arrayDeque.addLast(3);
@@ -68,9 +68,9 @@ public class ArrayDequeTest {
     @Test
     public void sizeTest() {
         ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
-        int x = 10000;
+        int x = 1000;
         int y = 9000;
-        int z = 2600;
+        int z = 2000;
 
         for (int i =0; i < x; i++) {
             arrayDeque.addLast(3);

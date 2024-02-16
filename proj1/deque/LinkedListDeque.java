@@ -110,7 +110,7 @@ public class LinkedListDeque<Item> implements Deque<Item> {
 
         StuffNode p = sentinel.next;
 
-        while (index <= 0) {
+        while (index > 0) {
             if (p.item == null) {
                 return null;
             }

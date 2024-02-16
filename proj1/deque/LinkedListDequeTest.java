@@ -131,4 +131,15 @@ public class LinkedListDequeTest {
         }
 
     }
+
+    @Test
+    public void getTest() {
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+
+        for (int i = 0; i < 100; i++) {
+            lld1.addLast(i);
+
+            assertEquals((int) lld1.get(i),i);
+        }
+    }
 }
