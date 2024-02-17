@@ -1,9 +1,6 @@
 package game2048;
 
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.Observable;
-import java.util.Objects;
+import java.util.*;
 
 
 /** The state of a game of 2048.
@@ -172,6 +169,19 @@ public class Model extends Observable {
         Arrays.sort(existRow);
 
         return existRow;
+    }
+
+    private static ArrayList<Integer> Rows(Board b, int c) {
+        int count = 0;
+        ArrayList<Integer> rows = new ArrayList<>();
+
+        for (int row = 0; row < b.size();row++) {
+            if (b.tile(c, row) != null) {
+                rows.add(row);
+                count += 1;
+            }
+        }
+        return rows;
     }
 
 
