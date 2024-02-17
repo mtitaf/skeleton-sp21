@@ -114,21 +114,10 @@ public class Model extends Observable {
             // changed local variable to true.
 
         /** Make the direction correctly */
-        if (side == Side.NORTH) {
-            changed = allColMove(board);
-        } else if (side == Side.WEST) {
-            board.setViewingPerspective(Side.WEST);
-            changed = allColMove(board);
-            board.setViewingPerspective(Side.NORTH);
-        } else if (side == Side.EAST) {
-            board.setViewingPerspective(Side.EAST);
-            changed = allColMove(board);
-            board.setViewingPerspective(Side.NORTH);
-        } else if (side == Side.SOUTH) {
-            board.setViewingPerspective(Side.SOUTH);
-            changed = allColMove(board);
-            board.setViewingPerspective(Side.NORTH);
-        }
+
+        board.setViewingPerspective(side);
+        changed = allColMove(board);
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
@@ -137,110 +126,89 @@ public class Model extends Observable {
         return changed;
     }
 
-/** remove null from array */
-    public static int[] toIntArray(Integer[] integerArray) {
-        // 创建一个与 Integer 数组大小相同的 int 数组
-        int[] intArray = new int[integerArray.length];
 
-        // 遍历 Integer 数组，逐个提取整数值并存储到 int 数组中
-        for (int i = 0; i < integerArray.length; i++) {
-            intArray[i] = integerArray[i]; // 自动拆箱
-        }
 
-        return intArray;
-    }
-/**  Returns rows present in column */
-    private static int[] colExistRow(Board b,int c) {
-        int count = 0;
-        Integer[] existRowInteger = new Integer[4];
-        for (int row = 0; row < b.size();row++) {
-            if (b.tile(c, row) != null) {
-                existRowInteger[count] = row;
-                count += 1;
+    /**  Returns rows present in column */
+    private static int[] getRows(Board b, int col) {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+
+        for (int r = 0; r < b.size(); r++) {
+            if (b.tile(col, r) != null) {
+                arrayList.add(r);
             }
         }
-        if (count == 0) {
+
+        if (arrayList.isEmpty()) {
             return null;
         }
-        existRowInteger = Arrays.stream(existRowInteger)
-                .filter(Objects::nonNull)
-                .toArray(Integer[]::new);
-        int[] existRow = toIntArray(existRowInteger);
-        Arrays.sort(existRow);
 
-        return existRow;
-    }
-
-    private static ArrayList<Integer> Rows(Board b, int c) {
-        int count = 0;
-        ArrayList<Integer> rows = new ArrayList<>();
-
-        for (int row = 0; row < b.size();row++) {
-            if (b.tile(c, row) != null) {
-                rows.add(row);
-                count += 1;
-            }
+        int[] rows = new int[arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) {
+            rows[i] = arrayList.get(i);
         }
+
         return rows;
     }
 
 
 /** 移动所有的列 */
     private  boolean allColMove(Board b) {
-        boolean move = false;
+        boolean moved = false;
+        
         for (int col = 0; col < b.size(); col++) {
             if (SingleColMove(b,col)) {
-                move = true;
+                moved = true;
             }
-
         }
-        return move;
+        
+        return moved;
     }
 
 
 /** 根据列中存在块的个数选择不同的方法 */
     private  boolean SingleColMove(Board b,int c) {
-        int[] existRow = colExistRow(b, c);
-        if (existRow == null) {
+        int[] rows = getRows(b, c);
+        
+        if (rows == null) {
             return false;
         }
-        int count = existRow.length;
-        if (count == 1) {
-            return colOne(b, c, existRow);
-        } else if (count == 2) {
-            return colTwo(b, c, existRow);
-        } else if (count == 3) {
-            return colThree(b, c, existRow);
-        } else if (count == 4) {
-           return colFour(b, c, existRow);
+        
+        int tileCounts = rows.length;
+
+        if (tileCounts == 1) {return oneTile(b, c, rows);
+        } else if (tileCounts == 2) {return towTile(b, c, rows);
+        } else if (tileCounts == 3) {return threeTile(b, c, rows);
+        } else if (tileCounts == 4) {return fourTile(b, c, rows);
         }
+
         return false;
     }
 
     /** 只存在一个方块 */
-    private static boolean colOne(Board b, int c,int[] existRow) {
-        Tile t1 = b.tile(c, existRow[0]);
-        if (existRow[0] != b.size() - 1) {
+    private static boolean oneTile(Board b, int c,int[] rows) {
+        Tile t1 = b.tile(c, rows[0]);
+        if (rows[0] != b.size() - 1) {
             b.move(c,b.size() - 1, t1);
             return true;
         }
         return false;
     }
+    
     /**两个方块 */
-    private  boolean colTwo(Board b, int c, int[] existRow) {
-        Tile t1 = b.tile(c, existRow[0]);
-        Tile t2 = b.tile(c, existRow[1]);
+    private  boolean towTile(Board b, int c, int[] rows) {
+        Tile t1 = b.tile(c, rows[0]);
+        Tile t2 = b.tile(c, rows[1]);
         if (t2.value() == t1.value()) {
-            if (existRow[0] != b.size() -1) {
+            if (rows[0] != b.size() -1) {
             b.move(c,b.size() - 1, t2);
             }
             b.move(c,b.size() - 1, t1);
             this.score += t2.value() * 2;
             return true;
-        } else if (existRow[1] == 3 && existRow[0] == 2){
+        } else if (rows[1] == 3 && rows[0] == 2){
             return false;
         } else{
-            if (existRow[0] != b.size() -1) {
+            if (rows[0] != b.size() -1) {
                 b.move(c,b.size() - 1, t2);
             }
             b.move(c,b.size() - 2, t1);
@@ -249,12 +217,12 @@ public class Model extends Observable {
     }
 
     /** 三个方块 */
-    private boolean colThree(Board b, int c, int[] existRow) {
-        Tile t1 = b.tile(c, existRow[0]);
-        Tile t2 = b.tile(c, existRow[1]);
-        Tile t3 = b.tile(c, existRow[2]);
+    private boolean threeTile(Board b, int c, int[] rows) {
+        Tile t1 = b.tile(c, rows[0]);
+        Tile t2 = b.tile(c, rows[1]);
+        Tile t3 = b.tile(c, rows[2]);
         if (t3.value() == t2.value()) {
-            if (existRow[0] != b.size() - 1) {
+            if (rows[0] != b.size() - 1) {
             b.move(c, b.size() - 1, t3);
             }
             b.move(c, b.size() - 1, t2);
@@ -263,23 +231,24 @@ public class Model extends Observable {
             return true;
 
         } else if (t2.value() == t1.value()) {
-            if (existRow[0] != b.size() -1) {
+            if (rows[0] != b.size() -1) {
                 b.move(c,b.size() - 1, t3);
             }
-            if (existRow[1] != b.size() -2) {
+            if (rows[1] != b.size() -2) {
             b.move(c, b.size() - 2, t2);
             }
             b.move(c, b.size() - 2, t1);
             this.score += t2.value() * 2;
             return true;
 
-        } else if (existRow[2] == 3 && existRow[1] == 2 && existRow[0] ==1) {
+        } else if (rows[2] == 3 && rows[1] == 2 && rows[0] ==1) {
             return false;
+
         } else {
-            if (existRow[0] != b.size() -1) {
+            if (rows[0] != b.size() -1) {
                 b.move(c,b.size() - 1, t3);
             }
-            if (existRow[1] != b.size() -2) {
+            if (rows[1] != b.size() -2) {
                 b.move(c, b.size() - 2, t2);
             }
             b.move(c,b.size() - 3, t1);
@@ -288,28 +257,31 @@ public class Model extends Observable {
     }
 
     /** 四个方块 */
-    private boolean colFour(Board b,int c, int[] existRow) {
-        Tile t1 = b.tile(c, existRow[0]);
-        Tile t2 = b.tile(c, existRow[1]);
-        Tile t3 = b.tile(c, existRow[2]);
-        Tile t4 = b.tile(c, existRow[3]);
+    private boolean fourTile(Board b,int c, int[] rows) {
+        Tile t1 = b.tile(c, rows[0]);
+        Tile t2 = b.tile(c, rows[1]);
+        Tile t3 = b.tile(c, rows[2]);
+        Tile t4 = b.tile(c, rows[3]);
         if (t4.value() == t3.value() && t2.value() == t1.value()) {
             b.move(c, b.size() - 1, t3);
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 2, t1);
             this.score += t3.value() * 2 + t1.value() * 2;
             return true;
+
         }else if (t4.value() == t3.value()) {
             b.move(c, b.size() - 1, t3);
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 3, t1);
             this.score += t3.value() *2;
             return true;
+
         }else if (t3.value() == t2.value()) {
             b.move(c, b.size() - 2, t2);
             b.move(c, b.size() - 3, t1);
             this.score += t2.value() * 2;
             return true;
+
         }else if (t2.value() == t1.value()) {
             b.move(c, b.size() - 3, t1);
             this.score += t1.value() * 2;
