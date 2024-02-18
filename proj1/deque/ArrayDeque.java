@@ -31,11 +31,13 @@ public class ArrayDeque<Item> implements Deque<Item>{
     }
 
     /** 检查是否需要调整大小,如果需要,则调整大小 */
-    public void checkSize() {
-        if (size == items.length) {
-            resize((int)(items.length * 1.2));
-        } else if ((size < items.length / 4) && (size > 8)) {
-            resize(items.length / 4);
+    private void checkSize() {
+        int length = items.length;
+
+        if (size == length) {
+            resize((int)(length * 1.2));
+        } else if ((size < length / 4) && (size > 8)) {
+            resize(length / 4);
         }
     }
 
@@ -76,11 +78,16 @@ public class ArrayDeque<Item> implements Deque<Item>{
      * Once add the items have been printed, print out a new line. */
     @Override
     public void printDeque() {
+        if (size == 0) {
+            System.out.println("empty ArrayDeque");
+            return;
+        }
+
         int index;
 
         for (int i = 0; i < size; i++) {
             index = safeIndex(i);
-            System.out.print(items[first + i] + " ");
+            System.out.print(items[index] + " ");
         }
         System.out.println();
     }
@@ -118,8 +125,8 @@ public class ArrayDeque<Item> implements Deque<Item>{
 
         last--;
         setFirstLast();
-        size--;
 
+        size--;
         checkSize();
 
         return i;
@@ -136,6 +143,14 @@ public class ArrayDeque<Item> implements Deque<Item>{
         return items[index];
     }
 
+    @Override
+    public Item getFirst() {
+        if (size == 0) {
+            return null;
+        }
+        return items[first];
+    }
+
     /** Return last item,if not exists, return null */
     public Item getLast() {
         if (isEmpty()) {
@@ -145,7 +160,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
     }
 
     /** 调整 first last 的指向, 如果数组为空,将 first last 重置为 0 ,否则 ,确保指向不超出数组长度 */
-    public void setFirstLast() {
+    private void setFirstLast() {
         if (size == 0) {
             first = 0;
             last = 0;
@@ -157,7 +172,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
 
 
     /**  如果指向超出数组范围,将指向调整为 0 或 数组末端*/
-    public int indexFirstLast(int index) {
+    private int indexFirstLast(int index) {
         if (index == items.length) {
             index = 0;
         } else if (index < 0) {
@@ -168,7 +183,7 @@ public class ArrayDeque<Item> implements Deque<Item>{
 
 
     /** 确保 index 不会超出数组范围 */
-    public int safeIndex(int index) {
+    private int safeIndex(int index) {
         if (index + first >= items.length) {
             index = index + first - items.length;
         }else {

@@ -116,6 +116,13 @@ public class LinkedListDeque<Item> implements Deque<Item> {
         return p.item;
 
     }
+    @Override
+    public Item getFirst() {
+        if (sentinel.next.item == null) {
+            return null;
+        }
+        return sentinel.next.item;
+    }
 
     public Item getLast() {
         if (sentinel.prev.item == null) {
@@ -126,12 +133,12 @@ public class LinkedListDeque<Item> implements Deque<Item> {
 
 
 
-    public  Item getRecursive(int index) {
+    public Item getRecursive(int index) {
         StuffNode p = sentinel.next;
         return Recursive(p, index);
     }
 
-    private  Item Recursive(StuffNode p, int index) {
+    private Item Recursive(StuffNode p, int index) {
         if (p.item == null) {
             return null;
         } else if ( index == 0) {

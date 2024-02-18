@@ -19,7 +19,7 @@ public class ArrayDequeTest {
     public void addIsEmptySizeTest() {
 
 
-        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<>();
 
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
@@ -69,8 +69,8 @@ public class ArrayDequeTest {
     public void sizeTest() {
         ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
         int x = 100000;
-        int y = 90000;
-        int z = 4000;
+        int y = 99000;
+        int z = 10000;
 
         for (int i =0; i < x; i++) {
             arrayDeque.addLast(3);

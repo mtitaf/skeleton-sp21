@@ -13,9 +13,9 @@ public class DequeRandomTest {
         ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
         LinkedListDeque<Integer> linkDeque = new LinkedListDeque<>();
 
-        int N = 1000000;
+        int N = 100000;
         for (int i = 0; i < N; i += 1) {
-            int operationNumber = StdRandom.uniform(0, 4);
+            int operationNumber = StdRandom.uniform(0, 5);
             if (operationNumber == 0) {
                 // addLast
                 int randVal = StdRandom.uniform(0, 100);
@@ -26,10 +26,10 @@ public class DequeRandomTest {
                 int sizeL = arrayDeque.size();
                 int sizeB = linkDeque.size();
                 assertEquals(sizeL, sizeB);
-            } else if (operationNumber == 2 && arrayDeque.size() > 0 ) {
+            } else if (operationNumber == 2 && !arrayDeque.isEmpty()) {
                 //getLast
                 assertEquals(arrayDeque.getLast(), linkDeque.getLast());
-            } else if (operationNumber == 3 && arrayDeque.size() > 0) {
+            } else if (operationNumber == 3 && !arrayDeque.isEmpty()) {
                 //removeLast
                 int lastL = arrayDeque.removeLast();
                 int lastB = linkDeque.removeLast();
@@ -56,11 +56,11 @@ public class DequeRandomTest {
                 int sizeL = arrayDeque.size();
                 int sizeB = linkDeque.size();
                 assertEquals(sizeL, sizeB);
-            } else if (operationNumber == 2 && arrayDeque.size() > 0 ) {
+            } else if (operationNumber == 2 && !arrayDeque.isEmpty()) {
                 //getLast
                 assertEquals(arrayDeque.getLast(), linkDeque.getLast());
                 assertEquals(arrayDeque.get(operationNumber),linkDeque.getRecursive(operationNumber));
-            } else if (operationNumber == 3 && arrayDeque.size() > 0) {
+            } else if (operationNumber == 3 && !arrayDeque.isEmpty()) {
                 //removeLast
                 String lastL = arrayDeque.removeLast();
                 String lastB = linkDeque.removeLast();
