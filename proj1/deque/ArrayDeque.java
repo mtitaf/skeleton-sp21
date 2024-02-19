@@ -1,7 +1,5 @@
 package deque;
 
-import afu.org.checkerframework.checker.oigj.qual.O;
-import org.apache.commons.collections.iterators.ArrayIterator;
 
 import java.util.Iterator;
 
