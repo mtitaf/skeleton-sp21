@@ -1,6 +1,8 @@
 package deque;
 
-public class LinkedListDeque<Item> implements Deque<Item> {
+import java.util.Iterator;
+
+public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
     private class StuffNode {
         public Item item;
         public StuffNode next;
@@ -16,8 +18,55 @@ public class LinkedListDeque<Item> implements Deque<Item> {
     private StuffNode sentinel;
     private int size;
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        if (!(other instanceof Deque)) {
+            return false;
+        }
+        Deque<Item> o = (Deque<Item>) other;
 
+        if (o.size() != this.size()) {
+            return false;
+        }
 
+        for (int i = 0; i < size; i++) {
+            if (this.get(i) != o.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public class LinkedListDequeIterator implements Iterator<Item> {
+        private StuffNode p;
+        public LinkedListDequeIterator() {
+            p = sentinel.next;
+        }
+
+        @Override
+        public Item next() {
+            Item i = p.item;
+            p = p.next;
+            return i;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return p.item != null;
+        }
+    }
+
+    /** Return an Item iterator */
+    @Override
+    public Iterator<Item> iterator() {
+        return new LinkedListDequeIterator();
+    }
 
     public LinkedListDeque() {
         sentinel = new StuffNode(null,null,null);

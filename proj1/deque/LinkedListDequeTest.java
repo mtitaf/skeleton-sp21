@@ -159,4 +159,30 @@ public class LinkedListDequeTest {
         assertEquals(49,(int) lld1.getRecursive(49));
 
     }
+
+    @Test
+    public void IterTest() {
+        LinkedListDeque<String> linklist = new LinkedListDeque<>();
+        int x = 100000;
+        int y = 40000;
+        int z = 10000;
+
+        for (int i =0; i < x; i++) {
+            linklist.addLast("aaa");
+        }
+
+        for (int i =0; i < y; i++) {
+            linklist.removeFirst();
+            linklist.removeLast();
+        }
+
+        for (String i:linklist) {
+            assertNotNull(i);
+//            System.out.println(i);
+        }
+
+    }
+
+
+
 }

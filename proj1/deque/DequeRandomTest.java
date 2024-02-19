@@ -1,12 +1,14 @@
 package deque;
 
 import edu.princeton.cs.algs4.StdRandom;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 
 public class DequeRandomTest {
+
 
     @Test
     public void randomTest() {
@@ -69,8 +71,57 @@ public class DequeRandomTest {
         }
     }
 
+    @Test
+    public void IterTest() {
+        LinkedListDeque<String> LList = new LinkedListDeque<>();
+        ArrayDeque<String> AList = new ArrayDeque<>();
 
-    public void main(String[] args) {
+        LList.addLast("a");
+        AList.addLast("a");
+        LList.addLast("b");
+        AList.addLast("b");
+        LList.addFirst("z");
+        AList.addFirst("z");
+        LList.addFirst("x");
+        AList.addFirst("x");
+        LList.removeLast();
+        AList.removeLast();
+
+        for (String s : LList) {
+            System.out.print(s);
+        }
+        System.out.println();
+        for (String s : AList) {
+            System.out.print(s);
+        }
+        System.out.println();
+
+    }
+
+    @Test
+    public void equalTest() {
+        LinkedListDeque<String> LList = new LinkedListDeque<>();
+        ArrayDeque<String> AList = new ArrayDeque<>();
+
+        LList.addLast("a");
+        AList.addLast("a");
+        LList.addLast("b");
+        AList.addLast("b");
+        LList.addFirst("z");
+        AList.addFirst("z");
+        LList.addFirst("x");
+        AList.addFirst("x");
+        LList.removeLast();
+        AList.removeLast();
+
+        assertTrue(LList.equals(AList));
+        assertTrue(AList.equals(LList));
+        assertEquals(AList,LList);
+
+    }
+
+
+    public  void main(String[] args) {
         randomTest();
     }
 }
