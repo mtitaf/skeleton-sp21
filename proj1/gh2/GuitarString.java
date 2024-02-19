@@ -44,14 +44,14 @@ public class GuitarString {
      */
     public void tic() {
         double a = buffer.removeFirst();
-        double b = buffer.getFirst();
+        double b = buffer.get(0);
         double c = (a + b) * 0.5 * DECAY;
         buffer.addLast(c);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
-        return buffer.getFirst();
+        return buffer.get(0);
     }
 }
 
