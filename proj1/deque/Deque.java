@@ -33,9 +33,4 @@ public interface Deque<Item>  {
      *  1 is the next item, and so forth. if no such item exists,
      *  returns null. Must not alter the deque! */
     Item get(int index);
-
-    Item getFirst();
-
-    /** Return an Item iterator */
-    Iterator<Item> iterator();
 }

@@ -168,7 +168,8 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
         return p.item;
 
     }
-    @Override
+
+
     public Item getFirst() {
         if (sentinel.next.item == null) {
             return null;

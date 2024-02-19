@@ -59,7 +59,7 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
     /** Return an Item iterator */
-    @Override
+
     public Iterator<Item> iterator() {
         return new ArrayDequeIterator();
     }
@@ -199,7 +199,7 @@ public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
         return items[index];
     }
 
-    @Override
+
     public Item getFirst() {
         if (size == 0) {
             return null;
