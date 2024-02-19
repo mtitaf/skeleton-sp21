@@ -16,6 +16,9 @@ public class LinkedListDeque<Item> implements Deque<Item> {
     private StuffNode sentinel;
     private int size;
 
+
+
+
     public LinkedListDeque() {
         sentinel = new StuffNode(null,null,null);
         sentinel.prev = sentinel;

@@ -81,8 +81,28 @@ public class ArrayDequeTest {
         }
 
         assertTrue(arrayDeque.size() < z);
+    }
 
+    @Test
+    public void IterTest() {
+        ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
+        int x = 100000;
+        int y = 40000;
+        int z = 10000;
 
+        for (int i =0; i < x; i++) {
+            arrayDeque.addLast(3);
+        }
+
+        for (int i =0; i < y; i++) {
+            arrayDeque.removeFirst();
+            arrayDeque.removeLast();
+        }
+
+        for (Integer i:arrayDeque) {
+            assertNotNull(i);
+//            System.out.println(i);
+        }
 
     }
 

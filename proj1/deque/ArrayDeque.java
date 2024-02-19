@@ -1,12 +1,44 @@
 package deque;
 
-public class ArrayDeque<Item> implements Deque<Item>{
+import org.apache.commons.collections.iterators.ArrayIterator;
+
+import java.util.Iterator;
+
+public class ArrayDeque<Item> implements Deque<Item>, Iterable<Item> {
 
     private Item[] items;
     private int size;
     private int first;
     private int last;
 
+    public class ArrayDequeIterator implements Iterator<Item> {
+        private int iterIndex;
+        private int iterSize;
+
+        public ArrayDequeIterator() {
+            iterIndex = 0;
+            iterSize = size;
+        }
+
+        @Override
+        public Item next() {
+            Item i = items[safeIndex(iterIndex)];
+            iterSize--;
+            iterIndex++;
+            return i;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return iterSize != 0;
+        }
+    }
+
+    /** Return an Item iterator */
+    @Override
+    public Iterator<Item> iterator() {
+        return new ArrayDequeIterator();
+    }
 
     public ArrayDeque() {
         items = (Item[]) new Object[8];

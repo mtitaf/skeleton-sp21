@@ -1,6 +1,8 @@
 package deque;
 
-public interface Deque<Item> {
+import java.util.Iterator;
+
+public interface Deque<Item>  {
     /** Add an item of type T to the front of the deque.*/
     void addFirst(Item item);
 
@@ -33,4 +35,7 @@ public interface Deque<Item> {
     Item get(int index);
 
     Item getFirst();
+
+    /** Return an Item iterator */
+    Iterator<Item> iterator();
 }
