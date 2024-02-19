@@ -1,33 +1,35 @@
-//package deque;
-//import java.util.Comparator;
+package deque;
+import java.util.Comparator;
 
-//public class MaxArrayDeque<Item> extends ArrayDeque<Item> {
-//
-//    private MaxComparator maxC;
-//
-//    public MaxArrayDeque(Comparator<Item> c) {
-//        super();
-//    }
+public class MaxArrayDeque<Item> extends ArrayDeque<Item> {
 
-//    @Override
-//    public Item compareTo(MaxArrayDeque maxArray) {
-//
-//        return max();
-//    }
+    private Comparator<Item> cmp;
 
-//    public Item max() {
-//
-//    }
+    public MaxArrayDeque(Comparator<Item> c) {
+        super();
+        this.cmp = c;
+    }
 
+    public Item max() {
+        return max(cmp);
+    }
 
-//
-//    private static class MaxComparator implements Comparator<MaxArrayDeque> {
-//        public int compare(MaxArrayDeque a, MaxArrayDeque b) {
-//            return a.toString().compareTo(b.toString());
-//        }
-//
-//    }
-//    public static Comparator<MaxArrayDeque> getNameComparator() {
-//        return new MaxComparator();
-//    }
-//}
+    public Item max(Comparator<Item> c) {
+        if (this.isEmpty()) {
+            return null;
+        }
+        Item item = this.getFirst();
+
+        if (this.size() == 1) {
+            return item;
+        }
+
+        for (Item i : this) {
+            if (c.compare(item, i) < 0) {
+                item = i;
+            }
+        }
+        return item;
+    }
+
+}
