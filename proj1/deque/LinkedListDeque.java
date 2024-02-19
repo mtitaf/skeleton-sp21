@@ -2,13 +2,13 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private class StuffNode {
-        public Item item;
-        public StuffNode next;
-        public StuffNode prev;
+        private T item;
+        private StuffNode next;
+        private StuffNode prev;
 
-        public StuffNode(StuffNode p, Item i, StuffNode n) {
+        private StuffNode(StuffNode p, T i, StuffNode n) {
             prev = p;
             item = i;
             next = n;
@@ -29,7 +29,7 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
         if (!(other instanceof Deque)) {
             return false;
         }
-        Deque<Item> o = (Deque<Item>) other;
+        Deque<T> o = (Deque<T>) other;
 
         if (o.size() != this.size()) {
             return false;
@@ -43,15 +43,15 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
         return true;
     }
 
-    public class LinkedListDequeIterator implements Iterator<Item> {
+    public class LinkedListDequeIterator implements Iterator<T> {
         private StuffNode p;
         public LinkedListDequeIterator() {
             p = sentinel.next;
         }
 
         @Override
-        public Item next() {
-            Item i = p.item;
+        public T next() {
+            T i = p.item;
             p = p.next;
             return i;
         }
@@ -62,14 +62,14 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
         }
     }
 
-    /** Return an Item iterator */
+    /** Return an T iterator */
     @Override
-    public Iterator<Item> iterator() {
+    public Iterator<T> iterator() {
         return new LinkedListDequeIterator();
     }
 
     public LinkedListDeque() {
-        sentinel = new StuffNode(null,null,null);
+        sentinel = new StuffNode(null, null,null);
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
         size = 0;
@@ -78,7 +78,7 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
 
     /** Add an item of type T to the front of the deque.*/
     @Override
-    public  void addFirst(Item i) {
+    public  void addFirst(T i) {
 
         StuffNode item = new StuffNode(sentinel,i,sentinel.next);
         sentinel.next.prev = item;
@@ -88,7 +88,7 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
 
     /** Add an item of type T to the back of the deque. */
     @Override
-    public void addLast(Item i) {
+    public void addLast(T i) {
         StuffNode item = new StuffNode(sentinel.prev, i, sentinel);
         sentinel.prev.next = item;
         sentinel.prev = item;
@@ -117,12 +117,12 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
     /** Removes and returns the item at the front of the deque.
      * if no such item exists, returns ull. */
     @Override
-    public Item removeFirst() {
-        if (sentinel.next.item == null) {
+    public T removeFirst() {
+        if (isEmpty()) {
             return null;
         }
 
-        Item i = sentinel.next.item;
+        T i = sentinel.next.item;
         sentinel.next.next.prev = sentinel;
         sentinel.next = sentinel.next.next;
         size--;
@@ -133,12 +133,12 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
     /** Removes and returns the item at the back of the deque.
      * if no such item exists, returns null. */
     @Override
-    public Item removeLast() {
-        if (sentinel.next.item == null) {
+    public T removeLast() {
+        if (isEmpty()) {
             return null;
         }
 
-        Item i = sentinel.prev.item;
+        T i = sentinel.prev.item;
         sentinel.prev.prev.next = sentinel;
         sentinel.prev = sentinel.prev.prev;
         size--;
@@ -150,8 +150,8 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
      *  1 is the next item, and so forth. if no such item exists,
      *  returns null. Must not alter the deque! */
     @Override
-    public Item get(int index) {
-        if (sentinel.next.item == null || index < 0) {
+    public T get(int index) {
+        if (isEmpty() || index < 0) {
             return null;
         }
 
@@ -170,14 +170,14 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
     }
 
 
-    public Item getFirst() {
+    public T getFirst() {
         if (sentinel.next.item == null) {
             return null;
         }
         return sentinel.next.item;
     }
 
-    public Item getLast() {
+    public T getLast() {
         if (sentinel.prev.item == null) {
             return null;
         }
@@ -186,12 +186,15 @@ public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
 
 
 
-    public Item getRecursive(int index) {
+    public T getRecursive(int index) {
+        if (isEmpty() || index < 0) {
+            return null;
+        }
         StuffNode p = sentinel.next;
         return Recursive(p, index);
     }
 
-    private Item Recursive(StuffNode p, int index) {
+    private T Recursive(StuffNode p, int index) {
         if (p.item == null) {
             return null;
         } else if ( index == 0) {
