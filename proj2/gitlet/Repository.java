@@ -25,5 +25,10 @@ public class Repository {
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
+    public static void initRepository() {
+        File f = new File(".gitlet");
+        f.mkdir();
+    }
+
     /* TODO: fill in the rest of this class. */
 }

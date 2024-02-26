@@ -1,4 +1,6 @@
 package gitlet;
+import static gitlet.Repository.* ;
+import static gitlet.verifyCommand.*;
 
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
@@ -13,12 +15,20 @@ public class Main {
         String firstArg = args[0];
         switch(firstArg) {
             case "init":
+                if (verifyInit()) {
+                initRepository();
+                }
                 // TODO: handle the `init` command
-                break;
             case "add":
+
                 // TODO: handle the `add [filename]` command
                 break;
-            // TODO: FILL THE REST IN
+            case "commit":
+                break;
+            case "checkout":
+                break;
+            case "log":
+                break;
         }
     }
 }
