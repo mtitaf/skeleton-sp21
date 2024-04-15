@@ -2,8 +2,10 @@ package gitlet;
 
 // TODO: any imports you need here
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date; // TODO: You'll likely use this in this class
 
 /** Represents a gitlet commit object.
@@ -12,23 +14,23 @@ import java.util.Date; // TODO: You'll likely use this in this class
  *
  *  @author TODO
  */
-public class Commit {
+public class Commit implements Serializable {
 
-//    private class commitNode() {
-//        private String commitID;
-//        private String Date;
-//        private String files;
-//        private String versionLog;
-//
-//        private commitNode() {
-//            this.Date = ;
-//            this.files = ;
-//            this.versionLog = ;
-//            this.commitID = ;
-//        }
-//
-//    }
 
+
+    private String Date;
+    private ArrayList<String> files;
+    private String message;
+    private String parent;
+
+
+    public Commit() {
+        this.Date = "00:00:00 UTC, Thursday, 1 January 1970";
+    }
+
+    public Commit(String message) {
+        this.message = message;
+    }
 
     /**
      * TODO: add instance variables here.
@@ -39,18 +41,6 @@ public class Commit {
      */
 
     /** The message of this Commit. */
-    private String message;
-
-
-    public static String currentTime() {
-        // 获取当前时间
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return currentTime.format(formatter);
-    }
-
 
 
     /* TODO: fill in the rest of this class. */

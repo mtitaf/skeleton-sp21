@@ -19,6 +19,11 @@
 1. Field 1
 2. Field 2
 
+### Gitlet
+Main function
+
+### verify
+verify command parameters
 
 ## Algorithms
 
