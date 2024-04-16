@@ -29,6 +29,8 @@ public class Repository {
 
     public static final File HEAD = join(GITLET_DIR, "HEAD");
 
+    public static final File objects_dir = join(GITLET_DIR, "objects");
+
 
 
     /* TODO: fill in the rest of this class. */

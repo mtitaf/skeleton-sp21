@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
+import static gitlet.Repository.objects_dir;
 
 
 /** Assorted utilities.
@@ -257,7 +258,6 @@ class Utils {
 
         try {
             Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File copied successfully.");
         } catch (IOException e) {
             System.err.println("Failed to copy file: " + e.getMessage());
         }
@@ -273,6 +273,12 @@ class Utils {
             System.err.println("Failed to read file: " + e.getMessage());
             return null;
         }
+    }
+
+    public static File objectsPath(String sha1) {
+        File dir = join(objects_dir,sha1.substring(0, 2));
+        dir.mkdirs();
+        return join(dir, sha1.substring(2));
     }
 
 }
