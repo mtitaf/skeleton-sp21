@@ -1,8 +1,12 @@
 package gitlet;
 
 import java.io.File;
+import java.nio.file.Files;
+
 import static gitlet.Utils.*;
 import static gitlet.Repository.GITLET_DIR;
+import java.io.IOException;
+
 
 public class Gitlet {
     public void init() {
@@ -12,20 +16,25 @@ public class Gitlet {
         for (File f:folders) {
             f.mkdir();
         }
-        /*TODO mkdir folders */
 
         commit("init");
     }
 
     public void add(String filename) {
         File f = new File(filename);
-        String hash = sha1(f);
+        if (!f.exists()) {
+            System.out.println("File does not exist.");
+            return;
+        }
+
+        String hashSha = sha1(readFile(f));
+        String tPath = join(GITLET_DIR,hashSha).getPath();
+
+        copy(f.getPath(),tPath);
 
 //        File c = readObject(head);
 
-        if (!f.exists()) {
-            System.out.println("file not exist");
-        }
+
     }
 
 
@@ -46,6 +55,7 @@ public class Gitlet {
     public boolean checkout() {
         throw new RuntimeException();
     }
+
 
 
 

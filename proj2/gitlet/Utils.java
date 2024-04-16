@@ -10,8 +10,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -247,4 +249,30 @@ class Utils {
 
         return currentTime.format(formatter);
     }
+
+    public static void copy(String sPath, String tPath) {
+
+        Path sourcePath = Paths.get(sPath);
+        Path targetPath = Paths.get(tPath);
+
+        try {
+            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File copied successfully.");
+        } catch (IOException e) {
+            System.err.println("Failed to copy file: " + e.getMessage());
+        }
+    }
+
+
+    public static String readFile(File f) {
+        Path filePath = Path.of(f.getPath());
+
+        try {
+            return Files.readString(filePath, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            System.err.println("Failed to read file: " + e.getMessage());
+            return null;
+        }
+    }
+
 }
