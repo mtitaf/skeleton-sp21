@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
 import static gitlet.Repository.objects_dir;
 
@@ -280,5 +281,14 @@ class Utils {
         dir.mkdirs();
         return join(dir, sha1.substring(2));
     }
+
+
+
+
+    public static Branch readBranch(String b) {
+        String Sha = sha1(b);
+        return readObject(objectsPath(Sha), Branch.class);
+    }
+
 
 }

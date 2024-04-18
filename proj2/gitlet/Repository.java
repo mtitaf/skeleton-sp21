@@ -1,5 +1,4 @@
 package gitlet;
-
 import java.io.File;
 import static gitlet.Utils.*;
 
@@ -23,13 +22,19 @@ public class Repository {
     /** The current working directory. */
     public static final File CWD = new File(System.getProperty("user.dir"));
     /** The .gitlet directory. */
-    public static final File GITLET_DIR = join(CWD, ".gitlet");
+    public static final File PWD = join(CWD, ".gitlet");
 
-    public static final File REFS = join(GITLET_DIR, "refs");
+    public static final File REFS = join(PWD, "refs");
 
-    public static final File HEAD = join(GITLET_DIR, "HEAD");
+    public static final File HEAD = join(PWD, "HEAD");
 
-    public static final File objects_dir = join(GITLET_DIR, "objects");
+    public static final File headPath = join(PWD, readContentsAsString(HEAD));
+
+    public static final File objects_dir = join(PWD, "objects");
+
+    public static final File trackList = join(PWD, "trackFile");
+
+    public static final File addedList = join (PWD, "addedList");
 
 
 

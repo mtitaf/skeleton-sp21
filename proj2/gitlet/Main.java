@@ -32,28 +32,30 @@ public class Main {
         switch(firstArg) {
             case "init":
                 if (vInit(args)) {
-                git.init();
+                    git.init();
                 }
                 break;
+
             case "add":
                 vAdd(args);
                 git.add(args[1]);
                 break;
+
             case "commit":
                 verifyCommit(args);
                 git.commit(args[1]);
                 break;
+
             case "checkout":
                 break;
+
             case "log":
                 break;
-            case"delete":
-                File f = new File(".gitlet");
 
-                break;
             case "":
                 System.out.println("Please enter a command.");
                 break;
+
             default:
                 System.out.println("No command with that name exists.");
                 break;

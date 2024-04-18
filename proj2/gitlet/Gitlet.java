@@ -1,31 +1,29 @@
 package gitlet;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.nio.file.Files;
-
-import static gitlet.Utils.*;
-import static gitlet.Repository.GITLET_DIR;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import static gitlet.Utils.*;
+import static gitlet.Repository.*;
+
 
 
 public class Gitlet {
 
-    private final File  PWD = GITLET_DIR;
-    private final File track = join(PWD, "track");
+
 
     public void init() {
 
-        File[] folders = {join(PWD), join(PWD, "refs")};
+        File[] folders = {PWD};
 
-        for (File f:folders) {
-            f.mkdir();
-        }
+//        for (File f:folders) {
+//            f.mkdirs();
+//        }
 
-        commit("init");
+//        writeContents(HEAD, "ref/heads/master");
+//        Commit initCommit = new Commit();
+//        initCommit.saveCommit();
+
+
+
     }
 
     public void add(String filename) {
@@ -41,35 +39,19 @@ public class Gitlet {
 
         copy(f.getPath(),storage.getPath());
 
-        HashMap<String,String> trackList = new HashMap<>();
-
-
-
-        if (track.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(track))) {
-                trackList = (HashMap<String, String>) ois.readObject();
-                System.out.println("trackList has been read from file.");
-
-
-            } catch (IOException | ClassNotFoundException e) {
-                System.err.println("Failed to read trackList from file: " + e.getMessage());
-            }
-        }
-
-        trackList.put(f.getPath(),fileSha);
-        writeObject(track, trackList);
+        Branch index = readBranch(readContentsAsString(headPath));
+        index.addedMap.put(f.getPath(), fileSha);
+        index.trackMap.put(f.getPath(), fileSha);
+        index.save();
 
     }
 
 
     public void commit(String message) {
-        Commit NewCommit;
+        Commit NewCommit = new Commit(message);
+        NewCommit.saveCommit();
 
-        if (message.equals("init")) {
-            NewCommit = new Commit();
-            File f = join(PWD,sha1("test"));
-            writeObject(f,NewCommit);
-        }
+        writeContents(HEAD, NewCommit.Sha1);
     }
 
     public void log() {
