@@ -5,7 +5,7 @@ import static gitlet.Utils.*;
 
 
 public class Branch implements Serializable {
-    public  String name;
+    public String name;
 
     public Branch() {
         this.name = "master";
@@ -21,7 +21,7 @@ public class Branch implements Serializable {
     public HashMap<String, String> trackMap = new HashMap<>();
 
     public void save() {
-        writeObject(objectsPath(sha1(this.name)), this);
+        writeObject(StringtoObjectsFile(join("refs", "heads", this.name).getPath()), this);
     }
 
 }

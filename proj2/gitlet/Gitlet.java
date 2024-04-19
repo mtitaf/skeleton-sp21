@@ -1,6 +1,6 @@
 package gitlet;
 import java.io.File;
-import java.io.IOException;
+
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
@@ -11,18 +11,18 @@ public class Gitlet {
 
 
     public void init() {
+        File[] folders = {PWD, join(REFS, "heads")};
 
-        File[] folders = {PWD};
+        for (File f:folders) {
+            f.mkdirs();
+        }
 
-//        for (File f:folders) {
-//            f.mkdirs();
-//        }
+        writeContents(HEAD, join("refs", "heads", "master").toString());
+        Commit initCommit = new Commit();
+        initCommit.saveCommit();
 
-//        writeContents(HEAD, "ref/heads/master");
-//        Commit initCommit = new Commit();
-//        initCommit.saveCommit();
-
-
+        Branch master = new Branch();
+        master.save();
 
     }
 
@@ -33,17 +33,16 @@ public class Gitlet {
             return;
         }
 
-        String fileSha = sha1(readFile(f));
-        File storage = objectsPath(fileSha);
+        String Sha = sha1(readContentsAsString(f));
+        File storage = StringtoObjectsFile(readContentsAsString(f));
         storage.mkdirs();
 
         copy(f.getPath(),storage.getPath());
 
-        Branch index = readBranch(readContentsAsString(headPath));
-        index.addedMap.put(f.getPath(), fileSha);
-        index.trackMap.put(f.getPath(), fileSha);
-        index.save();
-
+        Branch b = readHEAD();
+        b.addedMap.put(f.getPath(), Sha);
+        b.trackMap.put(f.getPath(), Sha);
+        b.save();
     }
 
 
@@ -51,7 +50,7 @@ public class Gitlet {
         Commit NewCommit = new Commit(message);
         NewCommit.saveCommit();
 
-        writeContents(HEAD, NewCommit.Sha1);
+        writeContents(HEAD, NewCommit.Sha);
     }
 
     public void log() {

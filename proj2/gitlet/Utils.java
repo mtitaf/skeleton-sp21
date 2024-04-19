@@ -20,9 +20,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.List;
-import static gitlet.Repository.objects_dir;
+import static gitlet.Repository.*;
 
 
 /** Assorted utilities.
@@ -265,29 +264,21 @@ class Utils {
     }
 
 
-    public static String readFile(File f) {
-        Path filePath = Path.of(f.getPath());
 
-        try {
-            return Files.readString(filePath, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            System.err.println("Failed to read file: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public static File objectsPath(String sha1) {
-        File dir = join(objects_dir,sha1.substring(0, 2));
+    public static File StringtoObjectsFile(String s) {
+        String Sha = sha1(s);
+        File dir = join(objects_dir,Sha.substring(0, 2));
         dir.mkdirs();
-        return join(dir, sha1.substring(2));
+        return join(dir, Sha.substring(2));
     }
-
-
 
 
     public static Branch readBranch(String b) {
-        String Sha = sha1(b);
-        return readObject(objectsPath(Sha), Branch.class);
+        return readObject(StringtoObjectsFile(b), Branch.class);
+    }
+
+    public static Branch readHEAD() {
+        return readObject(StringtoObjectsFile(readContentsAsString(HEAD)),Branch.class);
     }
 
 
