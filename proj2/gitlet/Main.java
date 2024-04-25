@@ -27,8 +27,6 @@ public class Main {
             }
         }
 
-
-
         switch(firstArg) {
             case "init":
                 if (vInit(args)) {
@@ -46,10 +44,24 @@ public class Main {
                 git.commit(args[1]);
                 break;
 
+            case "rm":
+                verifyRm(args);
+                git.rm(args[1]);
+                break;
+
             case "checkout":
                 break;
 
             case "log":
+                git.log();
+                break;
+
+            case "DumpObj":
+                DumpObj.main();
+                break;
+
+            case "status":
+                git.status();
                 break;
 
             case "":

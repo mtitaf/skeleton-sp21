@@ -267,9 +267,13 @@ class Utils {
 
     public static File StringtoObjectsFile(String s) {
         String Sha = sha1(s);
-        File dir = join(objects_dir,Sha.substring(0, 2));
+        return ShaToFile(Sha);
+    }
+
+    public static File ShaToFile(String s) {
+        File dir = join(objects_dir,s.substring(0, 2));
         dir.mkdirs();
-        return join(dir, Sha.substring(2));
+        return join(dir, s.substring(2));
     }
 
 
@@ -278,7 +282,8 @@ class Utils {
     }
 
     public static Branch readHEAD() {
-        return readObject(StringtoObjectsFile(readContentsAsString(HEAD)),Branch.class);
+        String head = readContentsAsString(HEAD);
+        return readObject(StringtoObjectsFile(head),Branch.class);
     }
 
 

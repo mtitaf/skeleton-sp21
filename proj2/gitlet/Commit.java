@@ -16,21 +16,21 @@ import static gitlet.Repository.*;
  *
  *  @author TODO
  */
-public class Commit implements Serializable {
+public class Commit implements Serializable, Dumpable {
 
     public String Sha;
 
-    private String Date;
+    public String Date;
     HashMap<String, String> files;
-    private String message;
-    private String parent;
+    public String message;
+    public String parent;
 
 
     public Commit() {
         this.Date = "00:00:00 UTC, Thursday, 1 January 1970";
         this.message = "init";
-        this.Sha = sha1("initRepository");
         this.files = new HashMap<>();
+        this.Sha = sha1("initRepository");
         this.parent = this.Sha;
     }
 
@@ -38,14 +38,19 @@ public class Commit implements Serializable {
         this.message = message;
         this.Date = currentTime();
         this.files = readHEAD().trackMap;
+        this.parent = readContentsAsString(join(PWD, readContentsAsString(HEAD)));
         this.Sha = sha1(this.toString());
     }
 
 
-    public void saveCommit() {
+    public void commit() {
         System.out.println(this);
         writeContents(join(PWD,readContentsAsString(HEAD)), this.Sha);
-        writeObject(StringtoObjectsFile(this.toString()), this);
+        writeObject(ShaToFile(this.Sha), this);
+
+        Branch b =  readHEAD();
+        b.addedMap.clear();
+        b.save();
     }
     /**
      * TODO: add instance variables here and .
@@ -59,12 +64,18 @@ public class Commit implements Serializable {
     /** The message of this Commit. */
     @Override
     public String toString() {
-        String s = "Date:       " + this.Date + "\n" +
+        String s = "Commit:     " + this.Sha + "\n" +
+                   "Date:       " + this.Date + "\n" +
                    "message:    " + this.message + "\n" +
                    "files:      " + this.files.keySet() + "\n" +
                    "parent:     " + this.parent ;
 
         return s;
+    }
+
+    @Override
+    public void dump() {
+        System.out.println(this.toString());
     }
     /* TODO: fill in the rest of this class. */
 }
