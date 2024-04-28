@@ -56,12 +56,28 @@ public class Main {
                 git.log();
                 break;
 
+            case "global-log":
+                git.globalLog();
+                break;
+
+            case "find":
+                git.find(args[1]);
+                break;
+
             case "DumpObj":
                 DumpObj.main();
                 break;
 
             case "status":
                 git.status();
+                break;
+
+            case "branch":
+                git.branch(args[1]);
+                break;
+
+            case "rm-branch":
+                git.rmBranch(args[1]);
                 break;
 
             case "":

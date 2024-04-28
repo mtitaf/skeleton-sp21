@@ -1,4 +1,6 @@
 package gitlet;
+import edu.princeton.cs.algs4.ST;
+
 import java.io.File;
 
 import static gitlet.Utils.*;
@@ -21,6 +23,10 @@ public class Gitlet {
 
         Branch master = new Branch();
         master.save();
+        GlobalInfo g = new GlobalInfo();
+        g.branchInfo.put(master.name, master.Sha);
+        g.save();
+
         Commit initCommit = new Commit();
         initCommit.commit();
 
@@ -62,7 +68,9 @@ public class Gitlet {
         Branch b = readHEAD();
         b.addedMap.remove(filePath);
         b.trackMap.remove(filePath);
-        b.removeList.add(filePath);
+        if (!b.removeList.contains(filename)) {
+            b.removeList.add(filePath);
+        }
         b.save();
     }
 
@@ -125,10 +133,78 @@ public class Gitlet {
         return files;
     }
 
+    public void globalLog() {
+        GlobalInfo g = readGlobalInfo();
+        for (String s : g.messageTree.values()) {
+            System.out.println(s);
+        }
+    }
 
-    public boolean checkout() {
+
+    public void find(String message) {
+        GlobalInfo g = readGlobalInfo();
+        for (String m : g.messageTree.keySet()) {
+            if (m.contains(message)) {
+                System.out.println(g.messageTree.get(m) + "  " + m);
+            }
+        }
+    }
+
+    public void branch(String name) {
+
+        Branch newBranch = new Branch(name);
+        Commit headCommit = readHeadCommit();
+        newBranch.trackMap = headCommit.files;
+        newBranch.save();
+
+        GlobalInfo g = readGlobalInfo();
+        g.branchInfo.put(newBranch.name, newBranch.Sha);
+        g.save();
+
+        File f = join(".gitlet", "refs", "heads", name);
+        writeContents(f, headCommit);
+    }
+
+    public void rmBranch(String name) {
+
+    }
+
+    public boolean checkout(String... args) {
+        if (args[1].equals("--")) {
+            String filename = args[2];
+            Branch b = readHEAD();
+            String fileSha = b.trackMap.get(filename);
+            File f = ShaToFile(fileSha);
+            copy(f.getPath(),join(filename).getPath());
+        }
+
+        GlobalInfo g = readGlobalInfo();
+
+        if (g.branchInfo.containsKey(args[1])) {
+            String branchName = args[1];
+            Branch b =readBranch(branchName);
+            for (String s : b.trackMap.keySet()) {
+                File f = ShaToFile(b.trackMap.get(s));
+                copy(f.getPath(), s);
+            }
+            String head = "refs" + "heads" + b.name;
+            writeContents(HEAD, head);
+
+        }
+
+        if (g.messageTree.containsValue(args[1])) {
+            String commitId = args[1];
+            String filename = args[3];
+            Commit c = readObject(ShaToFile(commitId), Commit.class);
+            String fileSha = c.files.get(filename);
+            File f = ShaToFile(fileSha);
+            copy(f.getPath(),filename);
+        }
+
         throw new RuntimeException();
     }
+
+
 
 
 

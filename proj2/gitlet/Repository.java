@@ -32,9 +32,7 @@ public class Repository {
 
     public static final File objects_dir = join(PWD, "objects");
 
-    public static final File trackList = join(PWD, "trackFile");
-
-    public static final File addedList = join (PWD, "addedList");
+    public static final String GlobalInfoFileName = "globalInfo";
 
 
     /* TODO: fill in the rest of this class. */

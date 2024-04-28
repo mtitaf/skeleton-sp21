@@ -286,5 +286,14 @@ class Utils {
         return readObject(StringtoObjectsFile(head),Branch.class);
     }
 
+    public static GlobalInfo readGlobalInfo() {
+        return readObject(StringtoObjectsFile(GlobalInfoFileName), GlobalInfo.class);
+    }
+    public static Commit readHeadCommit() {
+        File headFile = join(PWD,readContentsAsString(HEAD));
+        String HeadCommit = readContentsAsString(headFile);
+        File HeadCommitFIle = ShaToFile(HeadCommit);
+        return readObject(HeadCommitFIle, Commit.class);
+    }
 
 }

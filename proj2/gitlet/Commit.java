@@ -51,6 +51,10 @@ public class Commit implements Serializable, Dumpable {
         Branch b =  readHEAD();
         b.addedMap.clear();
         b.save();
+
+        GlobalInfo g = readGlobalInfo();
+        g.messageTree.put(this.message, this.Sha);
+        g.save();
     }
     /**
      * TODO: add instance variables here and .

@@ -1,13 +1,14 @@
 package gitlet;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+
 import static gitlet.Utils.*;
 
 
 public class Branch implements Serializable,Dumpable {
     public String name;
+
+    public String Sha;
 
 
     public HashMap<String, String> addedMap = new HashMap<>();
@@ -17,17 +18,20 @@ public class Branch implements Serializable,Dumpable {
     public ArrayList<String> removeList = new ArrayList<>();
 
 
+
     public Branch() {
         this.name = "master";
+        this.Sha = sha1(join("refs", "heads", this.name).getPath());
     }
 
     public Branch(String name) {
         this.name = name;
+        this.Sha = sha1(join("refs", "heads", this.name).getPath());
     }
 
 
     public void save() {
-        File f = StringtoObjectsFile(join("refs", "heads", this.name).getPath());
+        File f = ShaToFile(this.Sha);
         writeObject(f, this);
     }
 
