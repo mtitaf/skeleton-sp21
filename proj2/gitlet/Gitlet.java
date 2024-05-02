@@ -1,16 +1,9 @@
 package gitlet;
-import edu.princeton.cs.algs4.ST;
-
 import java.io.File;
-
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
 
-
-
 public class Gitlet {
-
-
 
     public void init() {
         File[] folders = {PWD, join(REFS, "heads")};
@@ -29,7 +22,6 @@ public class Gitlet {
 
         Commit initCommit = new Commit();
         initCommit.commit();
-
 
     }
 
@@ -52,19 +44,15 @@ public class Gitlet {
         b.save();
     }
 
-
     public void commit(String message) {
 
         Commit NewCommit = new Commit(message);
-
         NewCommit.commit();
 
-//        writeContents(join(PWD, readContentsAsString(HEAD)), NewCommit.Sha);
     }
 
     public void rm(String filename) {
         String filePath = join(filename).getPath();
-
         Branch b = readHEAD();
         b.addedMap.remove(filePath);
         b.trackMap.remove(filePath);
@@ -95,10 +83,11 @@ public class Gitlet {
     }
 
     public void status() {
-        Branch b = readHEAD();
+        GlobalInfo g = readGlobalInfo();
 
+        Branch b = readHEAD();
         System.out.println("=== Branches ===");
-        for (String branchName : getAllBranch()) {
+        for (String branchName : g.branchInfo.keySet()) {
             if (branchName.equals(b.name)) {
                 branchName = "*" + branchName;
             }
@@ -127,19 +116,12 @@ public class Gitlet {
 
     }
 
-    private String[] getAllBranch() {
-        File branches = join(".gitlet", "refs", "heads");
-        String[] files = branches.list();
-        return files;
-    }
-
     public void globalLog() {
         GlobalInfo g = readGlobalInfo();
         for (String s : g.messageTree.values()) {
             System.out.println(s);
         }
     }
-
 
     public void find(String message) {
         GlobalInfo g = readGlobalInfo();
@@ -162,11 +144,21 @@ public class Gitlet {
         g.save();
 
         File f = join(".gitlet", "refs", "heads", name);
-        writeContents(f, headCommit);
+        writeContents(f, headCommit.Sha);
     }
 
     public void rmBranch(String name) {
+        Branch b = readBranch(name);
+        GlobalInfo g = readGlobalInfo();
 
+        File branch = ShaToFile(b.Sha);
+        File branchHead = join( PWD,"refs", "heads", name);
+        g.branchInfo.remove(name);
+
+        branchHead.delete();
+        branch.delete();
+
+        g.save();
     }
 
     public boolean checkout(String... args) {
@@ -176,6 +168,7 @@ public class Gitlet {
             String fileSha = b.trackMap.get(filename);
             File f = ShaToFile(fileSha);
             copy(f.getPath(),join(filename).getPath());
+            System.exit(0);
         }
 
         GlobalInfo g = readGlobalInfo();
@@ -187,8 +180,9 @@ public class Gitlet {
                 File f = ShaToFile(b.trackMap.get(s));
                 copy(f.getPath(), s);
             }
-            String head = "refs" + "heads" + b.name;
+            String head = join( "refs" , "heads" , b.name).getPath();
             writeContents(HEAD, head);
+            System.exit(0);
 
         }
 
@@ -199,14 +193,38 @@ public class Gitlet {
             String fileSha = c.files.get(filename);
             File f = ShaToFile(fileSha);
             copy(f.getPath(),filename);
+            System.exit(0);
         }
 
         throw new RuntimeException();
     }
 
+    public void merge(String name) {
+        Branch currentBranch = readHEAD();
+        Branch mergeBranch = readBranch(name);
 
+        if (currentBranch.equals(mergeBranch)) {
+            System.out.println("Current branch fast-forwarded.");
+            System.exit(0);
+        }
 
+        if (currentBranch.headCommitId.equals(mergeBranch.headCommitId)) {
+            System.out.println("Given branch is an ancestor of the current branch.");
+            System.exit(0);
+        }
 
+        for (String filename: mergeBranch.trackMap.keySet()) {
+            if (currentBranch.trackMap.containsKey(filename)) {
+                File file1 = ShaToFile(currentBranch.trackMap.get(filename));
+                File file2 = ShaToFile(mergeBranch.trackMap.get(filename));
+                mergeFile(file1, file2);
+            }
+        }
+    }
 
-
+    public void mergeFile(File file1, File file2) {
+        if (file1.equals(file2)) {
+            return;
+        }
+    }
 }

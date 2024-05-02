@@ -10,6 +10,8 @@ public class Branch implements Serializable,Dumpable {
 
     public String Sha;
 
+    public String headCommitId;
+
 
     public HashMap<String, String> addedMap = new HashMap<>();
 

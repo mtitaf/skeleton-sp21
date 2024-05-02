@@ -16,9 +16,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 import static gitlet.Repository.*;
@@ -243,12 +245,17 @@ class Utils {
     }
 
     public static String currentTime() {
-        // 获取当前时间
-        LocalDateTime currentTime = LocalDateTime.now();
+        // 创建一个SimpleDateFormat对象，指定日期格式
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // 创建一个Date对象，表示当前时间
+        Date date = new Date();
 
-        return currentTime.format(formatter);
+        // 使用SimpleDateFormat对象格式化日期
+        String formattedDate = sdf.format(date);
+
+        // 输出格式化后的日期字符串
+        return formattedDate;
     }
 
     public static void copy(String sPath, String tPath) {
@@ -278,7 +285,7 @@ class Utils {
 
 
     public static Branch readBranch(String b) {
-        return readObject(StringtoObjectsFile(b), Branch.class);
+        return readObject(StringtoObjectsFile(join("refs", "heads", b).getPath()), Branch.class);
     }
 
     public static Branch readHEAD() {

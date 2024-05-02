@@ -50,6 +50,7 @@ public class Main {
                 break;
 
             case "checkout":
+                git.checkout(args);
                 break;
 
             case "log":
@@ -79,6 +80,9 @@ public class Main {
             case "rm-branch":
                 git.rmBranch(args[1]);
                 break;
+
+            case "merge":
+                git.merge(args[1]);
 
             case "":
                 System.out.println("Please enter a command.");

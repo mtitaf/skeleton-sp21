@@ -27,8 +27,8 @@ public class Commit implements Serializable, Dumpable {
 
 
     public Commit() {
-        this.Date = "00:00:00 UTC, Thursday, 1 January 1970";
-        this.message = "init";
+        this.Date = "Wed Dec 31 16:00:00 1969 -0800";
+        this.message = "initial commit";
         this.files = new HashMap<>();
         this.Sha = sha1("initRepository");
         this.parent = this.Sha;
@@ -44,12 +44,13 @@ public class Commit implements Serializable, Dumpable {
 
 
     public void commit() {
-        System.out.println(this);
+//        System.out.println(this);
         writeContents(join(PWD,readContentsAsString(HEAD)), this.Sha);
         writeObject(ShaToFile(this.Sha), this);
 
         Branch b =  readHEAD();
         b.addedMap.clear();
+        b.headCommitId = this.Sha;
         b.save();
 
         GlobalInfo g = readGlobalInfo();
