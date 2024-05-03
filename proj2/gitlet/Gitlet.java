@@ -108,7 +108,7 @@ public class Gitlet {
         }
         System.out.println();
 
-        System.out.println("=== Modifications");
+        System.out.println("=== Modifications Not Staged For Commit ===");
         System.out.println();
 
         System.out.println("=== Untracked Files ===");
