@@ -69,11 +69,7 @@ public class Gitlet {
             File CommitFile = ShaToFile(currentCommitId);
 
             Commit currentCommit = readObject(CommitFile, Commit.class);
-            System.out.println("===");
-            System.out.println("commit " + currentCommit.Sha);
-            System.out.println("Date: " + currentCommit.Date);
-            System.out.println(currentCommit.message);
-            System.out.println();
+            System.out.println(currentCommit);
             if (currentCommitId.equals(currentCommit.parent)) {
                 break;
             }
@@ -119,7 +115,9 @@ public class Gitlet {
     public void globalLog() {
         GlobalInfo g = readGlobalInfo();
         for (String s : g.messageTree.values()) {
-            System.out.println(s);
+            File f = ShaToFile(s);
+            Commit c = readObject(f, Commit.class);
+            System.out.println(c);
         }
     }
 

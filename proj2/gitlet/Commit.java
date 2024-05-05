@@ -69,12 +69,10 @@ public class Commit implements Serializable, Dumpable {
     /** The message of this Commit. */
     @Override
     public String toString() {
-        String s = "Commit:     " + this.Sha + "\n" +
-                   "Date:       " + this.Date + "\n" +
-                   "message:    " + this.message + "\n" +
-                   "files:      " + this.files.keySet() + "\n" +
-                   "parent:     " + this.parent ;
-
+        String s = "===\n" +
+                   "commit " + this.Sha + "\n" +
+                   "Date: " + this.Date + "\n" +
+                   this.message + "\n" ;
         return s;
     }
 
