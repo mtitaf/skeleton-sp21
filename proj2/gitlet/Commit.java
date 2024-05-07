@@ -50,6 +50,7 @@ public class Commit implements Serializable, Dumpable {
 
         Branch b =  readHEAD();
         b.addedMap.clear();
+        b.removeList.clear();
         b.headCommitId = this.Sha;
         b.save();
 

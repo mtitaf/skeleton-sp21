@@ -14,7 +14,7 @@ public class GlobalInfo implements Serializable,Dumpable {
     public TreeMap<String, String> branchInfo = new TreeMap<>();
 
     public void save() {
-        File f = StringtoObjectsFile(GlobalInfoFileName);
+        File f = StringtoObjectoFile(GlobalInfoFileName);
         writeObject(f, this);
     }
 

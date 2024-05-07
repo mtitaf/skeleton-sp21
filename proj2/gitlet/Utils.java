@@ -17,8 +17,6 @@ import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
@@ -272,7 +270,7 @@ class Utils {
 
 
 
-    public static File StringtoObjectsFile(String s) {
+    public static File StringtoObjectoFile(String s) {
         String Sha = sha1(s);
         return ShaToFile(Sha);
     }
@@ -285,16 +283,16 @@ class Utils {
 
 
     public static Branch readBranch(String b) {
-        return readObject(StringtoObjectsFile(join("refs", "heads", b).getPath()), Branch.class);
+        return readObject(StringtoObjectoFile(join("refs", "heads", b).getPath()), Branch.class);
     }
 
     public static Branch readHEAD() {
         String head = readContentsAsString(HEAD);
-        return readObject(StringtoObjectsFile(head),Branch.class);
+        return readObject(StringtoObjectoFile(head),Branch.class);
     }
 
     public static GlobalInfo readGlobalInfo() {
-        return readObject(StringtoObjectsFile(GlobalInfoFileName), GlobalInfo.class);
+        return readObject(StringtoObjectoFile(GlobalInfoFileName), GlobalInfo.class);
     }
     public static Commit readHeadCommit() {
         File headFile = join(PWD,readContentsAsString(HEAD));

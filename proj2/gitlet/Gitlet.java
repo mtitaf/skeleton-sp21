@@ -33,7 +33,15 @@ public class Gitlet {
         }
 
         String Sha = sha1(readContentsAsString(f));
-        File storage = StringtoObjectsFile(readContentsAsString(f));
+        Commit headCommit = readHeadCommit();
+        if (headCommit.files.containsKey(filename)) {
+            if (headCommit.files.get(filename).equals(Sha)) {
+                return;
+            }
+        }
+
+
+        File storage = StringtoObjectoFile(readContentsAsString(f));
         storage.mkdirs();
 
         copy(f.getPath(),storage.getPath());
@@ -52,13 +60,17 @@ public class Gitlet {
     }
 
     public void rm(String filename) {
-        String filePath = join(filename).getPath();
         Branch b = readHEAD();
-        b.addedMap.remove(filePath);
-        b.trackMap.remove(filePath);
-        if (!b.removeList.contains(filename)) {
-            b.removeList.add(filePath);
+        Commit headCommit = readHeadCommit();
+        if (headCommit.files.containsKey(filename)) {
+            join(filename).delete();
+            if (!b.removeList.contains(filename)) {
+                b.removeList.add(filename);
+            }
         }
+        b.addedMap.remove(filename);
+        b.trackMap.remove(filename);
+
         b.save();
     }
 

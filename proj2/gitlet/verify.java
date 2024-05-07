@@ -2,8 +2,6 @@ package gitlet;
 
 import java.io.File;
 
-import static gitlet.Repository.CWD;
-import static gitlet.Repository.PWD;
 import static gitlet.Utils.join;
 import static gitlet.Utils.readHEAD;
 
@@ -44,7 +42,7 @@ public class verify {
         }
 
         Branch b = readHEAD();
-        if (b.addedMap.isEmpty()) {
+        if (b.addedMap.isEmpty() && b.removeList.isEmpty()) {
             System.out.println("No changes added to the commit.");
             System.exit(0);
         }
