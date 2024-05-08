@@ -32,6 +32,12 @@ public class Gitlet {
             return;
         }
 
+        Branch headBranch = readHEAD();
+        if (headBranch.removeList.contains(filename)) {
+            headBranch.removeList.remove(filename);
+            headBranch.save();
+        }
+
         String Sha = sha1(readContentsAsString(f));
         Commit headCommit = readHeadCommit();
         if (headCommit.files.containsKey(filename)) {
@@ -46,10 +52,10 @@ public class Gitlet {
 
         copy(f.getPath(),storage.getPath());
 
-        Branch b = readHEAD();
-        b.addedMap.put(f.getPath(), Sha);
-        b.trackMap.put(f.getPath(), Sha);
-        b.save();
+
+        headBranch.addedMap.put(f.getPath(), Sha);
+        headBranch.trackMap.put(f.getPath(), Sha);
+        headBranch.save();
     }
 
     public void commit(String message) {
