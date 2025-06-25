@@ -42,8 +42,9 @@ public class Main {
                 break;
 
             case "add":
-                vAdd(args);
-                git.add(args[1]);
+                if (vAdd(args)) {
+                    git.add(args[1]);
+                }
                 break;
 
             case "commit":
