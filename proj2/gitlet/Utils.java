@@ -17,10 +17,8 @@ import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.List;
+import java.util.*;
+
 import static gitlet.Repository.*;
 
 
@@ -244,7 +242,7 @@ class Utils {
 
     public static String currentTime() {
         // 创建一个SimpleDateFormat对象，指定日期格式
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
 
         // 创建一个Date对象，表示当前时间
         Date date = new Date();

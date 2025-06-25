@@ -45,6 +45,7 @@ public class Commit implements Serializable, Dumpable {
 
     public void commit() {
 //        System.out.println(this);
+        // 写入内容到
         writeContents(join(PWD,readContentsAsString(HEAD)), this.Sha);
         writeObject(ShaToFile(this.Sha), this);
 

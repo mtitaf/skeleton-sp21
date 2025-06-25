@@ -4,6 +4,7 @@ import java.util.*;
 
 import static gitlet.Utils.*;
 
+/* 分支信息 */
 
 public class Branch implements Serializable,Dumpable {
     public String name;

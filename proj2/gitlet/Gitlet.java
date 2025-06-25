@@ -165,6 +165,10 @@ public class Gitlet {
 
     public void rmBranch(String name) {
         Branch b = readBranch(name);
+        if (b.name.equals(name)) {
+            System.out.println("Cannot remove the current branch");
+            return;
+        }
         GlobalInfo g = readGlobalInfo();
 
         File branch = ShaToFile(b.Sha);
