@@ -1,5 +1,6 @@
 package gitlet;
 import java.io.File;
+import java.util.Objects;
 
 import static gitlet.Repository.* ;
 import static gitlet.verify.*;
@@ -17,6 +18,12 @@ public class Main {
     public static void main(String[] args) {
         // TODO: what if args is empty?
         Gitlet git = new Gitlet();
+
+        if (args.length == 0) {
+            System.out.println("Please enter a command.");
+            return;
+        }
+
         String firstArg = args[0];
 
         if (!firstArg.equals("init")) {
