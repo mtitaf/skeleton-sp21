@@ -260,6 +260,7 @@ public class Gitlet {
                     String filename = args[3];
                     Commit c = readObject(ShaToFile(commitId), Commit.class);
                     String fileSha = c.files.get(filename);
+
                     File f = ShaToFile(fileSha);
                     copy(f.getPath(), filename);
                     System.exit(0);
@@ -302,7 +303,10 @@ public class Gitlet {
         }
 
         for (String filename: mergeBranch.trackMap.keySet()) {
-            if (currentBranch.trackMap.containsKey(filename)) {
+            if (!currentBranch.trackMap.containsKey(filename)){
+                return;
+            }
+            else {
                 File file1 = ShaToFile(currentBranch.trackMap.get(filename));
                 File file2 = ShaToFile(mergeBranch.trackMap.get(filename));
                 mergeFile(file1, file2);
@@ -314,5 +318,6 @@ public class Gitlet {
         if (file1.equals(file2)) {
             return;
         }
+
     }
 }
