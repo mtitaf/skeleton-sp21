@@ -228,11 +228,8 @@ public class Gitlet {
             else if (args.length == 2) {
                 if (g.branchInfo.containsKey(args[1])) {
                     String branchName = args[1];
-                    if (!g.branchInfo.containsKey(branchName)) {
-                        System.out.println("NO such branch exists.");
-                        return;
-                    }
-                    else if (readHEAD().name.equals(branchName)){
+
+                    if (readHEAD().name.equals(branchName)){
                         System.out.println("NO need to checkout the current branch.");
                         return;
                     }
@@ -246,6 +243,9 @@ public class Gitlet {
                     writeContents(HEAD, head);
                     System.exit(0);
 
+                }else  {
+                    System.out.println("NO such branch exists.");
+                    return;
                 }
             }
             // check [commit id] -- [file name]

@@ -97,6 +97,9 @@ public class Main {
             case "merge":
                 git.merge(args[1]);
 
+            case "clean":
+//                git.clean();
+
             case "":
                 System.out.println("Please enter a command.");
                 break;
