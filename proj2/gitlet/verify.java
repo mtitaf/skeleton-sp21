@@ -32,7 +32,7 @@ public class verify {
             System.out.println("Please surround message in quotes.");
             System.exit(0);
         }
-        if (args.length == 1) {
+        else if (args.length == 1) {
             System.out.println("Please enter a commit message.");
             System.exit(0);
         }

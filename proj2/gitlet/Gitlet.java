@@ -147,10 +147,15 @@ public class Gitlet {
 
     public void find(String message) {
         GlobalInfo g = readGlobalInfo();
+        int n = 0;
         for (String m : g.messageTree.keySet()) {
             if (m.contains(message)) {
-                System.out.println(g.messageTree.get(m) + "  " + m);
+                n += 1;
+                System.out.println(g.messageTree.get(m));
             }
+        }
+        if (n == 0) {
+            System.out.println("Found no commit whit that message.");
         }
     }
 
