@@ -149,13 +149,18 @@ public class Gitlet {
     }
 
     public void branch(String name) {
+        GlobalInfo g = readGlobalInfo();
+
+        if (g.branchInfo.containsKey(name)) {
+            System.out.println("A branch with that name already exists.");
+            return;
+        }
 
         Branch newBranch = new Branch(name);
         Commit headCommit = readHeadCommit();
         newBranch.trackMap = headCommit.files;
         newBranch.save();
 
-        GlobalInfo g = readGlobalInfo();
         g.branchInfo.put(newBranch.name, newBranch.Sha);
         g.save();
 
@@ -164,12 +169,18 @@ public class Gitlet {
     }
 
     public void rmBranch(String name) {
+        GlobalInfo g = readGlobalInfo();
+
+        if (g.branchInfo.containsKey(name)) {
+            System.out.println("A branch with that name already exists.");
+            return;
+        }
+
         Branch b = readBranch(name);
         if (b.name.equals(name)) {
             System.out.println("Cannot remove the current branch");
             return;
         }
-        GlobalInfo g = readGlobalInfo();
 
         File branch = ShaToFile(b.Sha);
         File branchHead = join( PWD,"refs", "heads", name);

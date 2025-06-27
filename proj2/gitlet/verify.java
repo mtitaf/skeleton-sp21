@@ -40,6 +40,10 @@ public class verify {
             System.out.println("Please enter a commit message.");
             System.exit(0);
         }
+        if (args[1].isEmpty()) {
+            System.out.println("Please enter a commit message.");
+            System.exit(0);
+        }
 
         Branch b = readHEAD();
         if (b.addedMap.isEmpty() && b.removeList.isEmpty()) {
