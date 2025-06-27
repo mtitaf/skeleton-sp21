@@ -89,6 +89,9 @@ public class Main {
                 git.rmBranch(args[1]);
                 break;
 
+            case "reset":
+                git.reset(args[1]);
+                break;
             case "merge":
                 git.merge(args[1]);
 

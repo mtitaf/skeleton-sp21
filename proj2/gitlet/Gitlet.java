@@ -221,6 +221,8 @@ public class Gitlet {
 
     public void reset(String commitId) {
         Commit inputCommit = readObject(ShaToFile(commitId),Commit.class);
+
+        //TODO if commit not exist ,print error info
         Branch currentHead = readHEAD();
         for (String i : inputCommit.files.keySet()) {
             if (!currentHead.trackMap.containsKey(i)) {
@@ -234,8 +236,6 @@ public class Gitlet {
 
     public void merge(String name) {
         Branch currentBranch = readHEAD();
-
-        //TODO if commit not exist ,print error info
 
         Branch mergeBranch = readBranch(name);
 
