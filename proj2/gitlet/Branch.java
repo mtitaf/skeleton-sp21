@@ -20,6 +20,8 @@ public class Branch implements Serializable,Dumpable {
 
     public ArrayList<String> removeList = new ArrayList<>();
 
+    public ArrayList<String> commitList = new ArrayList<>();
+
 
 
     public Branch() {

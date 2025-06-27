@@ -53,6 +53,7 @@ public class Commit implements Serializable, Dumpable {
         b.addedMap.clear();
         b.removeList.clear();
         b.headCommitId = this.Sha;
+        b.commitList.add(this.Sha);
         b.save();
 
         GlobalInfo g = readGlobalInfo();

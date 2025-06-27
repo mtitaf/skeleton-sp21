@@ -2,6 +2,7 @@ package gitlet;
 import java.io.File;
 import static gitlet.Utils.*;
 import static gitlet.Repository.*;
+import static gitlet.verify.*;
 
 public class Gitlet {
 
@@ -59,6 +60,11 @@ public class Gitlet {
     }
 
     public void commit(String message) {
+        Branch b = readHEAD();
+        if (b.addedMap.isEmpty() && b.removeList.isEmpty()) {
+            System.out.println("No changes added to the commit.");
+            System.exit(0);
+        }
 
         Commit NewCommit = new Commit(message);
         NewCommit.commit();
@@ -171,8 +177,8 @@ public class Gitlet {
     public void rmBranch(String name) {
         GlobalInfo g = readGlobalInfo();
 
-        if (g.branchInfo.containsKey(name)) {
-            System.out.println("A branch with that name already exists.");
+        if (!g.branchInfo.containsKey(name)) {
+            System.out.println("A branch with that name does not exists.");
             return;
         }
 
@@ -192,42 +198,72 @@ public class Gitlet {
         g.save();
     }
 
-    public boolean checkout(String... args) {
-        if (args[1].equals("--")) {
-            String filename = args[2];
-            Branch b = readHEAD();
-            String fileSha = b.trackMap.get(filename);
-            File f = ShaToFile(fileSha);
-            copy(f.getPath(),join(filename).getPath());
-            System.exit(0);
-        }
+    public void checkout(String... args) {
 
         GlobalInfo g = readGlobalInfo();
+            //checkout -- [file name]
+            if (args.length == 3) {
+                String filename = args[2];
+                Commit c = readHeadCommit();
 
-        if (g.branchInfo.containsKey(args[1])) {
-            String branchName = args[1];
-            Branch b =readBranch(branchName);
-            for (String s : b.trackMap.keySet()) {
-                File f = ShaToFile(b.trackMap.get(s));
-                copy(f.getPath(), s);
+                //check filename
+                if (!c.files.containsKey(filename)) {
+                    System.out.println("File does not exist in that commit.");
+                    System.exit(0);
+                }
+
+
+                Branch b = readHEAD();
+                String fileSha = b.trackMap.get(filename);
+                File f = ShaToFile(fileSha);
+                copy(f.getPath(), join(filename).getPath());
+                System.exit(0);
             }
-            String head = join( "refs" , "heads" , b.name).getPath();
-            writeContents(HEAD, head);
-            System.exit(0);
+            // checkout [branch name]
+            else if (args.length == 2) {
+                if (g.branchInfo.containsKey(args[1])) {
+                    String branchName = args[1];
+                    if (!g.branchInfo.containsKey(branchName)) {
+                        System.out.println("NO such branch exists.");
+                        return;
+                    }
+                    else if (readHEAD().name.equals(branchName)){
+                        System.out.println("NO need to checkout the current branch.");
+                        return;
+                    }
 
+                    Branch b = readBranch(branchName);
+                    for (String s : b.trackMap.keySet()) {
+                        File f = ShaToFile(b.trackMap.get(s));
+                        copy(f.getPath(), s);
+                    }
+                    String head = join("refs", "heads", b.name).getPath();
+                    writeContents(HEAD, head);
+                    System.exit(0);
+
+                }
+            }
+            // check [commit id] -- [file name]
+            else if (args.length == 4) {
+                if (g.messageTree.containsValue(args[1])) {
+                    String commitId = args[1];
+                    Branch b = readHEAD();
+                    if (!b.commitList.contains(commitId)){
+                        System.out.println("No commit with that id exists.");
+                        return;
+                    }
+                    String filename = args[3];
+                    Commit c = readObject(ShaToFile(commitId), Commit.class);
+                    String fileSha = c.files.get(filename);
+                    File f = ShaToFile(fileSha);
+                    copy(f.getPath(), filename);
+                    System.exit(0);
+                }
+            }
+            else{
+                throw new RuntimeException();
         }
 
-        if (g.messageTree.containsValue(args[1])) {
-            String commitId = args[1];
-            String filename = args[3];
-            Commit c = readObject(ShaToFile(commitId), Commit.class);
-            String fileSha = c.files.get(filename);
-            File f = ShaToFile(fileSha);
-            copy(f.getPath(),filename);
-            System.exit(0);
-        }
-
-        throw new RuntimeException();
     }
 
     public void reset(String commitId) {

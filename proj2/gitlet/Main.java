@@ -48,7 +48,7 @@ public class Main {
                 break;
 
             case "commit":
-                verifyCommit(args);
+                verifyCommitId(args);
                 git.commit(args[1]);
                 break;
 
@@ -58,6 +58,7 @@ public class Main {
                 break;
 
             case "checkout":
+//                verifyCheckout(args);
                 git.checkout(args);
                 break;
 
@@ -70,6 +71,7 @@ public class Main {
                 break;
 
             case "find":
+                verifyCommitId(args);
                 git.find(args[1]);
                 break;
 

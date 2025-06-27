@@ -2,8 +2,7 @@ package gitlet;
 
 import java.io.File;
 
-import static gitlet.Utils.join;
-import static gitlet.Utils.readHEAD;
+import static gitlet.Utils.*;
 
 public class verify {
 
@@ -24,13 +23,10 @@ public class verify {
 
 
     public static boolean vAdd(String[] args) {
-        if (args.length != 2) {
-            return false;
-        }
-        return true;
+        return args.length == 2;
     }
 
-    public static boolean verifyCommit(String[] args) {
+    public static void verifyCommitId(String[] args) {
 
         if (args.length > 2) {
             System.out.println("Please surround message in quotes.");
@@ -44,14 +40,6 @@ public class verify {
             System.out.println("Please enter a commit message.");
             System.exit(0);
         }
-
-        Branch b = readHEAD();
-        if (b.addedMap.isEmpty() && b.removeList.isEmpty()) {
-            System.out.println("No changes added to the commit.");
-            System.exit(0);
-        }
-
-        return true;
     }
 
     public static void verifyRm(String[] args) {
@@ -69,6 +57,10 @@ public class verify {
         }
 
     }
+
+//    public static void verifyCheckout(String[] args) {
+//
+//    }
 
 
 
