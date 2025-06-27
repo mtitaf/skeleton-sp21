@@ -219,8 +219,24 @@ public class Gitlet {
         throw new RuntimeException();
     }
 
+    public void reset(String commitId) {
+        Commit inputCommit = readObject(ShaToFile(commitId),Commit.class);
+        Branch currentHead = readHEAD();
+        for (String i : inputCommit.files.keySet()) {
+            if (!currentHead.trackMap.containsKey(i)) {
+                currentHead.trackMap.remove(i);
+            }
+        }
+        currentHead.headCommitId = commitId;
+        writeContents( StringtoObjectoFile( readContentsAsString(HEAD)),commitId);
+        currentHead.save();
+    }
+
     public void merge(String name) {
         Branch currentBranch = readHEAD();
+
+        //TODO if commit not exist ,print error info
+
         Branch mergeBranch = readBranch(name);
 
         if (currentBranch.equals(mergeBranch)) {
