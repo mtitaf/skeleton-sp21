@@ -91,7 +91,7 @@ public class HexWorld {
     private boolean checkRight(int length, int startWight,int startHeight) {
         int rightest = startWight + length *3 - 1 ;
         int bottomest = startHeight - length * 3;
-        return rightest < WIDTH -1 && bottomest > 0;
+        return rightest < WIDTH -2 && bottomest > 0;
 
     }
 
@@ -111,7 +111,7 @@ public class HexWorld {
         HexWorld h = new HexWorld();
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
-        int length = 3;
+        int length = 7;
         TETile[][] world = h.Genworld(WIDTH, HEIGHT);
         int startWidth = h.getStartTile(length);
         int startHeight = HEIGHT -1;
@@ -123,13 +123,13 @@ public class HexWorld {
             int startHeightLeft = startHeight;
 
 
-
+//
             while (h.checkLeft(length,startWidthLeft,startHeightLeft)) {
                 startWidthLeft = startWidthLeft - (length * 2 -1);
                 startHeightLeft = startHeightLeft - length;
                 world = h.addHexagon(length,startWidthLeft,startHeightLeft,world);
             }
-
+//
             int startWidthRight = startWidth;
             int startHeightRight = startHeight;
 
