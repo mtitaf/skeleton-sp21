@@ -7,15 +7,15 @@ import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 import java.util.Random;
-import byow.Core.Repository.*;
 
 public class Engine {
     TERenderer ter = new TERenderer();
+    Utils unit = new Utils();
+    UI ui = new UI();
 
     int width;
     int height;
     private Random rand;
-    int status;
 
 
     public Engine() {
@@ -28,7 +28,6 @@ public class Engine {
         StdDraw.setYscale(0, this.height);
         StdDraw.clear(Color.BLACK);
         StdDraw.enableDoubleBuffering();
-        this.status = 0;
     }
 
     /**
@@ -37,9 +36,31 @@ public class Engine {
      */
     public void interactWithKeyboard() {
         Key key = new Key();
+        StdDraw.clear();
+        ui.showStartUI();
         while (true) {
+
             if (StdDraw.hasNextKeyTyped()) {
-                key.execute(StdDraw.nextKeyTyped(),this.status);
+                String s = "nNLlQq";
+                char c = StdDraw.nextKeyTyped();
+                for (char i : s.toCharArray()) {
+                    if (c == 'n' || c == 'N') {
+                        String seedString = key.startUIKey(c);
+                        long seed = Utils.safeParseLong(seedString, -1);
+                        this.rand = new Random(seed);
+                        TETile[][] world = generateWorld(this.rand);
+                        generateRoom(20, 20, 5, world);
+                        ter.renderFrame(world);
+                        ui.showGameUI(3,2,"init");
+                        key.move(20 + 1, 20 -1,world, ter);
+                        return;
+                    } else if (c == 'l' || c == 'L') {
+                        return;
+                    } else if (c == 'q' || c == 'Q') {
+                        System.exit(0);
+                    }
+                }
+//                System.out.println("不支持的指令");
             }
         }
     }
@@ -67,15 +88,9 @@ public class Engine {
      */
     public TETile[][] interactWithInputString(String input) {
         String seedString = input.substring(1, input.length() - 2);
-        long seed = safeParseLong(seedString, -1);
+        long seed = Utils.safeParseLong(seedString, -1);
         this.rand = new Random(seed);
-        TETile[][] world = new TETile[width][height];
-        for (int x = 0 ; x< width ; x += 1) {
-            for (int y = 0; y < height; y += 1) {
-                world[x][y] = randomTile();
-            }
-        }
-        return world;
+        return generateWorld(rand);
         // TODO: Fill out this method so that it run the engine using the input
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
@@ -85,31 +100,38 @@ public class Engine {
         // that works for many different input types.
     }
 
-    private TETile randomTile() {
-        int tileNum = this.rand.nextInt(6);
-        return switch (tileNum) {
-            case 0 -> Tileset.WALL;
-            case 1 -> Tileset.FLOWER;
-            case 2 -> Tileset.GRASS;
-            case 4 -> Tileset.AVATAR;
-            case 5 -> Tileset.SAND;
-            default -> Tileset.UNLOCKED_DOOR;
-        };
+    private TETile[][] generateWorld(Random rand) {
+        TETile[][] world = new TETile[width][height];
+        for (int x = 0 ; x< width ; x += 1) {
+            for (int y = 0; y < height; y += 1) {
+//                if (y > height -4) {
+                    world[x][y] = Tileset.NOTHING;
+//                }else {
+//
+//                    world[x][y] = unit.randomTile(rand);
+//                }
+            }
+        }
+        return world;
+
     }
 
-    public static long safeParseLong(String str, long defaultValue) {
-        if (str == null || str.trim().isEmpty()) {
-            return defaultValue;
+    private TETile[][] generateRoom(int width, int height,int size,TETile[][] world) {
+//        ArrayList<Integer> x = new ArrayList<>();
+//        ArrayList<Integer> y = new ArrayList<>();
+        for (int i = 0; i < size; i += 1) {
+            world[width + i][height] = Tileset.WALL;
+            world[width][height - i] = Tileset.WALL;
+            world[width + i][height -size] = Tileset.WALL;
+            world[width +size][height -i] = Tileset.WALL;
+            world[width +1][height -1] = Tileset.AVATAR;
         }
+        return world;
 
-        try {
-            // 移除数字中的逗号（如 "1,000,000"）
-            String cleaned = str.replace(",", "").trim();
-            return Long.parseLong(cleaned);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
+
+
     }
+
 
 
 }

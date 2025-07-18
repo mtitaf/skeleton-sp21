@@ -4,32 +4,43 @@ import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 
+/** 绘制所有的用户界面 */
+
+
+
 public class UI {
     int width = Repository.WIDTH;
     int height = Repository.HEIGHT;
+    int midWidth = width / 2;
+    int midHeight = height / 2;
+    
+    
+    
     public void showStartUI() {
-        StdDraw.text(width /2, height /2 +5, "CS61B");
+        StdDraw.text(midWidth, midHeight +5, "CS61B");
         Font font = new Font("Monaco", Font.BOLD, 16);
         StdDraw.setFont(font);
-        StdDraw.textLeft(width /2-4, height /2-2, "New Game (N)");
-        StdDraw.textLeft(width /2-4, height /2-4, "Load Game (L)");
-        StdDraw.textLeft(width /2-4, height /2-6, "Quit (Q)");
+        StdDraw.textLeft(midWidth-4, midHeight -2, "New Game (N)");
+        StdDraw.textLeft(midWidth-4, midHeight -4, "Load Game (L)");
+        StdDraw.textLeft(midWidth-4, midHeight-6, "Quit (Q)");
         StdDraw.show();
 
     }
 
     public void seedUI() {
-        StdDraw.text(width, height, "Please enter a seed");
+        StdDraw.text(midWidth, height -2, "Please enter a seed");
         StdDraw.show();
     }
 
     public void showGameUI(int heath, int magic, String map) {
-        StdDraw.text(0,height - 1,"HEATH" +  heath);
-        StdDraw.text(0,height - 3, "magic" + magic);
-        StdDraw.text(width /2,height -1 , "map" + map);
+        StdDraw.textLeft(0,height - 1,"HEATH" +  heath);
+        StdDraw.textLeft(0,height - 3, "magic" + magic);
+        StdDraw.text(midWidth,height -1 , "map" + map);
         StdDraw.show();
 
     }
+
+//    public void
 
 
 }
