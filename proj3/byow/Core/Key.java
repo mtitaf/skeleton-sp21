@@ -3,6 +3,7 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import edu.princeton.cs.introcs.StdDraw;
+import byow.Core.Utils;
 
 public class Key {
     UI ui = new UI();
@@ -58,6 +59,16 @@ public class Key {
                     width = width + 1;
                     world[width][height] = Tileset.AVATAR;
                     ter.renderFrame(world);
+                }else if (c == ':') {
+                    while (true) {
+                        if (StdDraw.hasNextKeyTyped()) {
+                            c = StdDraw.nextKeyTyped();
+                            if (c == 'q' || c == 'Q') {
+                                Utils.saveGame(world);
+                                System.exit(0);
+                            }
+                        }
+                    }
                 }
 
             }

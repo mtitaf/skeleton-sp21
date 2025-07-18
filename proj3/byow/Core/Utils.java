@@ -3,7 +3,13 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Random;
+
+
 
 public class Utils {
 
@@ -47,4 +53,61 @@ public class Utils {
             System.err.println("睡眠被中断: " + e.getMessage());
         }
     }
+
+    public static void writeContents(File file, Object... contents) {
+        try {
+            if (file.isDirectory()) {
+                throw new IllegalArgumentException("cannot overwrite directory");
+            }
+            BufferedOutputStream str = new BufferedOutputStream(Files.newOutputStream(file.toPath()));
+            for (Object obj : contents) {
+                if (obj instanceof byte[]) {
+                    str.write((byte[]) obj);
+                } else {
+                    str.write(((String) obj).getBytes(StandardCharsets.UTF_8));
+                }
+            }
+            str.close();
+        } catch (IOException | ClassCastException excp) {
+            throw new IllegalArgumentException(excp.getMessage());
+        }
+    }
+
+    public static byte[] serialize(Serializable obj) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ObjectOutputStream objectStream = new ObjectOutputStream(stream);
+            objectStream.writeObject(obj);
+            objectStream.close();
+            return stream.toByteArray();
+        } catch (IOException excp) {
+//            throw error("Internal error serializing commit.");
+            return null;
+        }
+    }
+
+    public static void writeObject(File file, Serializable obj) {
+        writeContents(file, serialize(obj));
+    }
+
+    public static void saveGame(TETile[][] world) {
+        File saveFile = new File("game.sav");
+        SaveGame save = new SaveGame(world);
+        save.save();
+    }
+
+    /** Return the concatentation of FIRST and OTHERS into a File designator,
+     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
+     *  method. */
+    public static File join(String first, String... others) {
+        return Paths.get(first, others).toFile();
+    }
+
+    /** Return the concatentation of FIRST and OTHERS into a File designator,
+     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
+     *  method. */
+    public static  File join(File first, String... others) {
+        return Paths.get(first.getPath(), others).toFile();
+    }
+
 }
