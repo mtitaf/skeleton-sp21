@@ -160,22 +160,23 @@ public class Engine {
 
     private TETile[][] generateRoom(int width, int height,int size,TETile[][] world,Random rand) {
 
-        if (!checkWallRight(width, height ,size)) {
+        int roomWidth = 5 + rand.nextInt(4);
+        int roomHeight = 5 + rand.nextInt(4);
+
+        if (!checkWallRight(width, height ,roomWidth, roomHeight)) {
             return world;
         }
 
-
-        for (int i = 0; i < size; i += 1) {
-            extWall(width + i, height, world);
-            extWall(width, height - i, world);
-            extWall(width + i, height -size, world);
-            extWall(width +size,height -i,world);
+        for (int w = 0; w < roomWidth; w += 1) {
+            extWall(width +w , height, world);
+            extWall(width +w, height - roomHeight, world);
         }
-        world[width][height] = Tileset.WALL;
-        world[width + size][height -size] = Tileset.WALL;
-        width = width + size ;
-        height = height + size - 2;
-        size = 4 + rand.nextInt(3);
+        for (int h = 0; h < roomHeight; h += 1) {
+            extWall(width, height-h, world);
+            extWall(width + roomWidth,height - h, world);
+            }
+        width = width + roomWidth ;
+        height = height -2;
         return generateRoom(width, height, size, world,rand);
     }
 
@@ -191,8 +192,8 @@ public class Engine {
     }
 
 
-    private  boolean checkWallRight(int width, int height, int size) {
-        return width + size <= this.width && height + size <= this.height;
+    private  boolean checkWallRight(int width, int height, int roomWidth, int roomHeight) {
+        return width + roomWidth <= this.width -1 && height + roomHeight <= this.height -1;
     }
 
 

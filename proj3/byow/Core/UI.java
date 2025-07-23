@@ -28,7 +28,7 @@ public class UI {
     }
 
     public void seedUI() {
-        StdDraw.text(midWidth, height -2, "Please enter a seed");
+        StdDraw.text(midWidth, height -2, "Please enter a seed,Only digit");
         StdDraw.show();
     }
 

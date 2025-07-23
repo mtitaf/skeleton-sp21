@@ -113,10 +113,12 @@ public class Key {
                 if (c == 's' || c == 'S') {
                     return s.toString();
                 }
-                s.append(c);
-                StdDraw.clear();
-                StdDraw.text(Repository.WIDTH / 2, Repository.HEIGHT / 2, s.toString());
-                ui.seedUI();
+                if (Character.isDigit(c)) {
+                    s.append(c);
+                    StdDraw.clear();
+                    StdDraw.text(Repository.WIDTH / 2, Repository.HEIGHT / 2, s.toString());
+                    ui.seedUI();
+                }
             }
         }
 
