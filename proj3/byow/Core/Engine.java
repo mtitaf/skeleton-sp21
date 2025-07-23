@@ -55,7 +55,7 @@ public class Engine {
                         rand = new Random(seed);
                         TETile[][] world = generateWorld();
                         world[midWidth +1][midHeight -1] = Tileset.AVATAR;
-                        generateRoom(midWidth, midHeight, 5, world, rand);
+                        generateRoom(midWidth, midHeight, world, rand);
                         ter.renderFrame(world);
                         ui.showGameUI(3,2,"init");
                         key.move(midWidth + 1, midHeight -1,world, ter,false,"");
@@ -117,7 +117,7 @@ public class Engine {
 
         long seed = Utils.safeParseLong(seedString, -1);
         rand = new Random(seed);
-        TETile[][] world = generateRoom(midWidth,midHeight,5, generateWorld(),rand);
+        TETile[][] world = generateRoom(midWidth,midHeight, generateWorld(),rand);
         key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
 //        ter.renderFrame(world);
 
@@ -158,10 +158,10 @@ public class Engine {
         StdDraw.enableDoubleBuffering();
     }
 
-    private TETile[][] generateRoom(int width, int height,int size,TETile[][] world,Random rand) {
+    private TETile[][] generateRoom(int width, int height, TETile[][] world,Random rand) {
 
-        int roomWidth = 5 + rand.nextInt(4);
-        int roomHeight = 5 + rand.nextInt(4);
+        int roomWidth = 3 + rand.nextInt(4);
+        int roomHeight = 3 + rand.nextInt(4);
 
         if (!checkWallRight(width, height ,roomWidth, roomHeight)) {
             return world;
@@ -175,9 +175,13 @@ public class Engine {
             extWall(width, height-h, world);
             extWall(width + roomWidth,height - h, world);
             }
-        width = width + roomWidth ;
-        height = height -2;
-        return generateRoom(width, height, size, world,rand);
+        world[width][height] = Tileset.WALL;
+        world[width +roomWidth][height] = Tileset.WALL;
+        world[width][height - roomHeight] = Tileset.WALL;
+        world[width + roomWidth][height - roomHeight] = Tileset.WALL;
+        width = width + roomWidth;
+        height = height - 2;
+        return generateRoom(width, height, world, rand);
     }
 
 //    private int generateTile() {
@@ -193,7 +197,7 @@ public class Engine {
 
 
     private  boolean checkWallRight(int width, int height, int roomWidth, int roomHeight) {
-        return width + roomWidth <= this.width -1 && height + roomHeight <= this.height -1;
+        return width + roomWidth < this.width  && height - roomHeight > 0;
     }
 
 
