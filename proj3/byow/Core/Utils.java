@@ -90,9 +90,23 @@ public class Utils {
         writeContents(file, serialize(obj));
     }
 
-    public static void saveGame(TETile[][] world) {
+    public static <T extends Serializable> T readObject(File file,
+                                                 Class<T> expectedClass) {
+        try {
+            ObjectInputStream in =
+                    new ObjectInputStream(new FileInputStream(file));
+            T result = expectedClass.cast(in.readObject());
+            in.close();
+            return result;
+        } catch (IOException | ClassCastException
+                 | ClassNotFoundException excp) {
+            throw new IllegalArgumentException(excp.getMessage());
+        }
+    }
+
+    public static void saveGame(TETile[][] world, int width, int height) {
         File saveFile = new File("game.sav");
-        SaveGame save = new SaveGame(world);
+        SaveGame save = new SaveGame(world ,width, height);
         save.save();
     }
 

@@ -8,15 +8,6 @@ import byow.Core.Utils;
 public class Key {
     UI ui = new UI();
 
-    public boolean execute(String args,char key) {
-        switch (args){
-            case "startUI":
-                startUIKey(key);
-                return true;
-        }
-        return false;
-    }
-
 
     public String startUIKey(char key) {
         if (key == 'n' || key == 'N') {
@@ -34,27 +25,63 @@ public class Key {
         return null;
     }
 
-    public void move(int width, int height, TETile[][] world, TERenderer ter) {
+    public TETile[][] move(int width, int height, TETile[][] world, TERenderer ter,boolean headless,String cmdString) {
         while (true) {
-            if (StdDraw.hasNextKeyTyped()) {
+
+            if (headless) {
+                boolean quitMode = false;
+
+                for (char key : cmdString.toCharArray()) {
+                    char c = key;
+                    if ((c == 'w' || c == 'W') && world[width][height + 1].character() != '#') {
+                        world[width][height] = Tileset.NOTHING;
+                        height += 1;
+                        world[width][height] = Tileset.AVATAR;
+                    }     else  if ((c == 's' || c == 'S') && world[width][height - 1].character() != '#') {
+                        world[width][height] = Tileset.NOTHING;
+                        height -= 1;
+                        world[width][height] = Tileset.AVATAR;
+                    }else if ((c == 'a' || c == 'A') && world[width - 1][height].character() != '#') {
+                        world[width][height] = Tileset.NOTHING;
+                        width = width - 1;
+                        world[width][height] = Tileset.AVATAR;
+                    }
+                    else if ((c == 'd' || c == 'D') && world[width + 1][height].character() != '#') {
+                        world[width][height] = Tileset.NOTHING;
+                        width = width + 1;
+                        world[width][height] = Tileset.AVATAR;
+                    }else if (c == ':') {
+                            quitMode = true;
+                        }
+                    else if ((c == 'q' || c == 'Q') && quitMode){
+                        Utils.saveGame(world, width, height);
+                        System.exit(0);
+                    }
+                    }
+
+                return world;
+                }
+                else if (StdDraw.hasNextKeyTyped()) {
                 char c = StdDraw.nextKeyTyped();
-                if ((c == 'w' || c == 'W') && !world[width][height + 1].equals(Tileset.WALL)) {
+
+
+                if ((c == 'w' || c == 'W') && world[width][height + 1].character() != '#') {
                     world[width][height] = Tileset.NOTHING;
                     height += 1;
                     world[width][height] = Tileset.AVATAR;
                     ter.renderFrame(world);
-                }     else  if ((c == 's' || c == 'S') && !world[width][height - 1].equals(Tileset.WALL)) {
+                }     else  if ((c == 's' || c == 'S') && world[width][height - 1].character() != '#') {
                     world[width][height] = Tileset.NOTHING;
                     height -= 1;
                     world[width][height] = Tileset.AVATAR;
                     ter.renderFrame(world);
-                }else if ((c == 'a' || c == 'A') && !world[width - 1][height].equals(Tileset.WALL)) {
+                }else if ((c == 'a' || c == 'A') && world[width - 1][height].character() != '#') {
                     world[width][height] = Tileset.NOTHING;
                     width = width - 1;
                     world[width][height] = Tileset.AVATAR;
                     ter.renderFrame(world);
                 }
-                else if ((c == 'd' || c == 'D') && !world[width + 1][height].equals(Tileset.WALL)) {
+                else if ((c == 'd' || c == 'D') && world[width + 1][height].character() != '#') {
                     world[width][height] = Tileset.NOTHING;
                     width = width + 1;
                     world[width][height] = Tileset.AVATAR;
@@ -64,7 +91,7 @@ public class Key {
                         if (StdDraw.hasNextKeyTyped()) {
                             c = StdDraw.nextKeyTyped();
                             if (c == 'q' || c == 'Q') {
-                                Utils.saveGame(world);
+                                Utils.saveGame(world, width, height);
                                 System.exit(0);
                             }
                         }

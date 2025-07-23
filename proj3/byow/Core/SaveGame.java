@@ -9,9 +9,13 @@ import byow.Core.Utils.*;
 
 public class SaveGame implements Serializable {
     TETile[][] world;
+    int width;
+    int height;
 
-    public SaveGame(TETile[][] world) {
+    public SaveGame(TETile[][] world, int width,int height) {
         this.world = world;
+        this.width = width;
+        this.height = height;
     }
 
     public void save() {;

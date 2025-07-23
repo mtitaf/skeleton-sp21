@@ -12,6 +12,9 @@ public class Engine {
     TERenderer ter = new TERenderer();
     Utils unit = new Utils();
     UI ui = new UI();
+    Key key = new Key();
+    int midWidth;
+    int midHeight;
 
     int width;
     int height;
@@ -21,6 +24,8 @@ public class Engine {
     public Engine() {
         this.width = Repository.WIDTH;
         this.height = Repository.HEIGHT;
+        this.midWidth = width / 2;
+        this.midHeight = height / 2;
         StdDraw.setCanvasSize(this.width * 16, this.height * 16);
         Font font = new Font("Monaco", Font.BOLD, 30);
         StdDraw.setFont(font);
@@ -35,7 +40,6 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
-        Key key = new Key();
         StdDraw.clear();
         ui.showStartUI();
         while (true) {
@@ -49,13 +53,19 @@ public class Engine {
                         long seed = Utils.safeParseLong(seedString, -1);
                         this.rand = new Random(seed);
                         TETile[][] world = generateWorld(this.rand);
-                        generateRoom(20, 20, 5, world);
+                        world[midWidth +1][midHeight -1] = Tileset.AVATAR;
+                        generateRoom(midWidth, midHeight, 5, world);
                         ter.renderFrame(world);
                         ui.showGameUI(3,2,"init");
-                        key.move(20 + 1, 20 -1,world, ter);
+                        key.move(midWidth + 1, midHeight -1,world, ter,false,"");
                         return;
                     } else if (c == 'l' || c == 'L') {
+                        SaveGame save = Utils.readObject(Repository.saveFile,SaveGame.class);
+                        ter.renderFrame(save.world);
+                        ui.showGameUI(3,2,"init");
+                        key.move(save.width, save.height ,save.world, ter, false,"");
                         return;
+
                     } else if (c == 'q' || c == 'Q') {
                         System.exit(0);
                     }
@@ -87,10 +97,36 @@ public class Engine {
      * @return the 2D TETile[][] representing the state of the world
      */
     public TETile[][] interactWithInputString(String input) {
-        String seedString = input.substring(1, input.length() - 2);
+//        StringBuilder seedString = new StringBuilder();
+//        StringBuilder cmdString = new StringBuilder();
+//        Boolean s =false;
+//        Boolean cmd = false;
+        String[] inputs = input.split("[sS]",2);
+
+        String seedString = inputs[0];
+        // 确保字符串长度足够，至少有3个字符才能移除首尾（否则可能导致IndexOutOfBoundsException）
+        if (seedString != null && seedString.length() >= 3) {
+            seedString = seedString.substring(1, seedString.length() - 1);
+//            System.out.println(seedString); // 输出: elloWorl
+        } else {
+            System.out.println("字符串太短，无法移除首尾字符或为null。");
+        }
+
+
+        String cmdString = inputs[1];
+
+
+
+
         long seed = Utils.safeParseLong(seedString, -1);
         this.rand = new Random(seed);
-        return generateWorld(rand);
+        TETile[][] world = generateRoom(midWidth,midHeight,5, generateWorld(this.rand));
+        key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
+//        ter.renderFrame(world);
+
+
+
+        return world;
         // TODO: Fill out this method so that it run the engine using the input
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
@@ -100,16 +136,15 @@ public class Engine {
         // that works for many different input types.
     }
 
+    public void interactWithRemoteClient(String args) {
+
+    }
+
     private TETile[][] generateWorld(Random rand) {
         TETile[][] world = new TETile[width][height];
         for (int x = 0 ; x< width ; x += 1) {
             for (int y = 0; y < height; y += 1) {
-//                if (y > height -4) {
                     world[x][y] = Tileset.NOTHING;
-//                }else {
-//
-//                    world[x][y] = unit.randomTile(rand);
-//                }
             }
         }
         return world;
@@ -117,22 +152,41 @@ public class Engine {
     }
 
     private TETile[][] generateRoom(int width, int height,int size,TETile[][] world) {
-//        ArrayList<Integer> x = new ArrayList<>();
-//        ArrayList<Integer> y = new ArrayList<>();
-        for (int i = 0; i < size; i += 1) {
-            world[width + i][height] = Tileset.WALL;
-            world[width][height - i] = Tileset.WALL;
-            world[width + i][height -size] = Tileset.WALL;
-            world[width +size][height -i] = Tileset.WALL;
-            world[width +1][height -1] = Tileset.AVATAR;
+
+        if (!checkWallRight(width, height ,size)) {
+            return world;
         }
-        return world;
 
 
+        for (int i = 0; i < size; i += 1) {
+            extWall(width + i, height, world);
+            extWall(width, height - i, world);
+            extWall(width + i, height -size, world);
+            extWall(width +size,height -i,world);
+        }
+        world[width][height] = Tileset.WALL;
+        world[width + size][height -size] = Tileset.WALL;
+        width = width + size ;
+        height = height + size - 2;
+        size = 4 + this.rand.nextInt(3);
+        return generateRoom(width, height, size, world);
+    }
 
+//    private int generateTile() {
+//
+//    }
+    private void extWall(int width, int height, TETile[][] world) {
+        if (world[width][height].equals(Tileset.WALL)) {
+            world[width][height] = Tileset.NOTHING;
+        } else {
+            world[width][height] = Tileset.WALL;
+        }
     }
 
 
+    private  boolean checkWallRight(int width, int height, int size) {
+        return width + size <= this.width && height + size <= this.height;
+    }
 
 
 
