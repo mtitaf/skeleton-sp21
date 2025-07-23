@@ -52,10 +52,10 @@ public class Engine {
                     if (c == 'n' || c == 'N') {
                         String seedString = key.startUIKey(c);
                         long seed = Utils.safeParseLong(seedString, -1);
-                        this.rand = new Random(seed);
+                        rand = new Random(seed);
                         TETile[][] world = generateWorld();
                         world[midWidth +1][midHeight -1] = Tileset.AVATAR;
-                        generateRoom(midWidth, midHeight, 5, world);
+                        generateRoom(midWidth, midHeight, 5, world, rand);
                         ter.renderFrame(world);
                         ui.showGameUI(3,2,"init");
                         key.move(midWidth + 1, midHeight -1,world, ter,false,"");
@@ -116,8 +116,8 @@ public class Engine {
         String cmdString = inputs[1];
 
         long seed = Utils.safeParseLong(seedString, -1);
-        this.rand = new Random(seed);
-        TETile[][] world = generateRoom(midWidth,midHeight,5, generateWorld());
+        rand = new Random(seed);
+        TETile[][] world = generateRoom(midWidth,midHeight,5, generateWorld(),rand);
         key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
 //        ter.renderFrame(world);
 
@@ -158,7 +158,7 @@ public class Engine {
         StdDraw.enableDoubleBuffering();
     }
 
-    private TETile[][] generateRoom(int width, int height,int size,TETile[][] world) {
+    private TETile[][] generateRoom(int width, int height,int size,TETile[][] world,Random rand) {
 
         if (!checkWallRight(width, height ,size)) {
             return world;
@@ -175,8 +175,8 @@ public class Engine {
         world[width + size][height -size] = Tileset.WALL;
         width = width + size ;
         height = height + size - 2;
-        size = 4 + this.rand.nextInt(3);
-        return generateRoom(width, height, size, world);
+        size = 4 + rand.nextInt(3);
+        return generateRoom(width, height, size, world,rand);
     }
 
 //    private int generateTile() {
