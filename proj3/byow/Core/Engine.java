@@ -26,13 +26,13 @@ public class Engine {
         this.height = Repository.HEIGHT;
         this.midWidth = width / 2;
         this.midHeight = height / 2;
-        StdDraw.setCanvasSize(this.width * 16, this.height * 16);
-        Font font = new Font("Monaco", Font.BOLD, 30);
-        StdDraw.setFont(font);
-        StdDraw.setXscale(0, this.width);
-        StdDraw.setYscale(0, this.height);
-        StdDraw.clear(Color.BLACK);
-        StdDraw.enableDoubleBuffering();
+//        StdDraw.setCanvasSize(this.width * 16, this.height * 16);
+//        Font font = new Font("Monaco", Font.BOLD, 30);
+//        StdDraw.setFont(font);
+//        StdDraw.setXscale(0, this.width);
+//        StdDraw.setYscale(0, this.height);
+//        StdDraw.clear(Color.BLACK);
+//        StdDraw.enableDoubleBuffering();
     }
 
     /**
@@ -40,6 +40,7 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        setWorld();
         StdDraw.clear();
         ui.showStartUI();
         while (true) {
@@ -52,7 +53,7 @@ public class Engine {
                         String seedString = key.startUIKey(c);
                         long seed = Utils.safeParseLong(seedString, -1);
                         this.rand = new Random(seed);
-                        TETile[][] world = generateWorld(this.rand);
+                        TETile[][] world = generateWorld();
                         world[midWidth +1][midHeight -1] = Tileset.AVATAR;
                         generateRoom(midWidth, midHeight, 5, world);
                         ter.renderFrame(world);
@@ -112,15 +113,11 @@ public class Engine {
             System.out.println("字符串太短，无法移除首尾字符或为null。");
         }
 
-
         String cmdString = inputs[1];
-
-
-
 
         long seed = Utils.safeParseLong(seedString, -1);
         this.rand = new Random(seed);
-        TETile[][] world = generateRoom(midWidth,midHeight,5, generateWorld(this.rand));
+        TETile[][] world = generateRoom(midWidth,midHeight,5, generateWorld());
         key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
 //        ter.renderFrame(world);
 
@@ -140,7 +137,7 @@ public class Engine {
 
     }
 
-    private TETile[][] generateWorld(Random rand) {
+    private TETile[][] generateWorld() {
         TETile[][] world = new TETile[width][height];
         for (int x = 0 ; x< width ; x += 1) {
             for (int y = 0; y < height; y += 1) {
@@ -149,6 +146,16 @@ public class Engine {
         }
         return world;
 
+    }
+
+    private void setWorld() {
+        StdDraw.setCanvasSize(this.width * 16, this.height * 16);
+        Font font = new Font("Monaco", Font.BOLD, 30);
+        StdDraw.setFont(font);
+        StdDraw.setXscale(0, this.width);
+        StdDraw.setYscale(0, this.height);
+        StdDraw.clear(Color.BLACK);
+        StdDraw.enableDoubleBuffering();
     }
 
     private TETile[][] generateRoom(int width, int height,int size,TETile[][] world) {
