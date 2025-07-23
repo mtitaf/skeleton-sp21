@@ -102,28 +102,41 @@ public class Engine {
 //        StringBuilder cmdString = new StringBuilder();
 //        Boolean s =false;
 //        Boolean cmd = false;
-        String[] inputs = input.split("[sS]",2);
+        char firstChar = input.charAt(0);
+        if (Character.toLowerCase(firstChar) == 'n') {
+            String[] inputs = input.split("[sS]",2);
 
-        String seedString = inputs[0];
-        // 确保字符串长度足够，至少有3个字符才能移除首尾（否则可能导致IndexOutOfBoundsException）
-        if (seedString != null && seedString.length() >= 3) {
-            seedString = seedString.substring(1, seedString.length() - 1);
-//            System.out.println(seedString); // 输出: elloWorl
-        } else {
-            System.out.println("字符串太短，无法移除首尾字符或为null。");
+            String seedString = inputs[0];
+            // 确保字符串长度足够，至少有3个字符才能移除首尾（否则可能导致IndexOutOfBoundsException）
+            if (seedString != null && seedString.length() >= 3) {
+                seedString = seedString.substring(1, seedString.length() - 1);
+    //            System.out.println(seedString); // 输出: elloWorl
+            } else {
+                System.out.println("字符串太短，无法移除首尾字符或为null。");
+            }
+
+            String cmdString = inputs[1];
+            long seed = Utils.safeParseLong(seedString, -1);
+            rand = new Random(seed);
+            TETile[][] world = generateRoom(midWidth,midHeight, generateWorld(),rand);
+            world =  key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
+            return world;
+
+        } else if (Character.toLowerCase(firstChar) == 'l') {
+            String[] inputs = input.split("[lL]",2);
+            String cmdString = inputs[1];
+            SaveGame save = Utils.readObject(Repository.saveFile,SaveGame.class);
+            TETile[][] world = save.world;
+
+            world = key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
+            return world;
         }
 
-        String cmdString = inputs[1];
 
-        long seed = Utils.safeParseLong(seedString, -1);
-        rand = new Random(seed);
-        TETile[][] world = generateRoom(midWidth,midHeight, generateWorld(),rand);
-        key.move(midWidth + 1, midHeight -1,world, ter,true,cmdString);
 //        ter.renderFrame(world);
 
+        return null;
 
-
-        return world;
         // TODO: Fill out this method so that it run the engine using the input
         // passed in as an argument, and return a 2D tile representation of the
         // world that would have been drawn if the same inputs had been given
